@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 public class Instruction{
-
+ 
 	private String instructionType;
 	private String param1;
 	private String param2;
 
 	public Instruction(String inst){
-		String newInst = inst.replaceAll("[,\\s]+", " ");
+		String newInst = inst.replaceAll("[,\\s\\n]+", " ");
 		String [] parser = newInst.split(" ");
 		if(parser.length != 3) { return;}
 		System.out.println(parser.length);
