@@ -29,10 +29,10 @@ public class Instruction{
 	}
 
 	private void fillSupportedTypes(){
+		supportedTypes.add("CMP");
 		supportedTypes.add("LOAD");
 		supportedTypes.add("SUB");
 		supportedTypes.add("ADD");
-		supportedTypes.add("CMP");
 	}
 
 	public void printInstruction(){
