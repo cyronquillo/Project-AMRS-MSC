@@ -13,9 +13,9 @@ public class Instruction{
 		this.instructionType = parser[0];
 		this.param1 = parser[1];
 		this.param2 = parser[2];
-		System.out.println(instructionType + "  "  + param1 +  "  " +param2);
-		
+		// System.out.println(instructionType + "  "  + param1 +  "  " +param2);
 	}
+
 
 
 }
