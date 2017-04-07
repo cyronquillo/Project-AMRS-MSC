@@ -1,6 +1,6 @@
+package instantiation;
 import java.util.ArrayList;
 import java.util.HashSet;
-
 public class Instruction{
  	private static HashSet<String> supportedTypes = new HashSet<String>(4);
 	private String instructionType;
@@ -15,7 +15,7 @@ public class Instruction{
 			System.out.println("Parsing error!");
 			System.exit(0);
 		}
-		if(!Main.registers.containsKey(parser[1])){
+		if(!Initialization.registers.containsKey(parser[1])){
 			System.out.println("Register error!");
 			System.exit(0);	
 		}
