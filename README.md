@@ -34,11 +34,13 @@ Go to the current directory of Main.java
 
 4. For syntax of if, while, functions, etc., this format is to be followed:
 
+WHILE, FOR statements, and FUNCTIONS:
 	(while|for|function name) (params|condition) {
 			// statement inside here
 	}
 
-IF statements
+IF statements:
+
 	if (condition) {
 
 
