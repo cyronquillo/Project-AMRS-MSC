@@ -25,9 +25,12 @@ Go to the current directory of Main.java
 --------------------
 1. Always use camelCase for variables and function names 
 
+
 2. Use Tabs for indentation
 
+
 3. Never forget to document every function you create to avoid confusion when read by other members
+
 
 4. For syntax of if, while, functions, etc., this format is to be followed:
 
