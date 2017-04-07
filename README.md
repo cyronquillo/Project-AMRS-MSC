@@ -9,9 +9,9 @@ A Java implemented project in CMSC132
 * April 13		No Class
 * April 20		Tomasulo's Algo Exer
 * April 27		Checking of Milestone 1 - Requirement: Syntax Checking
-* May 04			Checking of Milestone 2 - Requirement: Required Outputs
-* May 11			Temporary Sched of Initial Project Presentation
-* May 18			Temp Sched of Final Project Presentation
+* May 04		Checking of Milestone 2 - Requirement: Required Outputs
+* May 11		Temporary Sched of Initial Project Presentation
+* May 18		Temp Sched of Final Project Presentation
 ```
 
 ## How to Compile:
