@@ -28,6 +28,18 @@ public class Instruction{
 		this.param2 = parser[2];
 	}
 
+	public String getInstType(){
+		return this.instructionType;
+	}
+
+	public String getParam1(){
+		return this.param1;
+	}
+
+	public String getParam2(){
+		return this.param2;
+	}
+
 	private void fillSupportedTypes(){
 		supportedTypes.add("CMP");
 		supportedTypes.add("LOAD");

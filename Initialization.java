@@ -24,7 +24,6 @@ public class Initialization{
 			}
 		}
 		catch(Exception ex){}
-		instructions.get(0).printInstruction();
 	}
 	public static void initialize(){
 		registers.put("R1",0);
