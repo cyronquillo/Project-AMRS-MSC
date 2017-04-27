@@ -13,6 +13,7 @@ public class Initialization{
 	public Initialization(String file){
 		initialize(); // registers
 		readFile(file); //file reading
+
 		buildClockCycles();
 		outputClockCycleSummary();
 	}
@@ -76,12 +77,6 @@ public class Initialization{
 
 		do{
 			clockcycle.add(new ArrayList<Instruction>());
-			// limit = clock+1 < instructions.size()? clock+1: instructions.size();
-			// for(int i = 0; i < limit; i++){
-			// 	if(instructions.get(i).getStatus() < Instruction.END){
-			// 		clockcycle.get(clock).add(instructions.get(i));
-			// 	}
-			// }
 			if(clock!= 0){
 				for(int i = 0; i < clockcycle.get(clock-1).size(); i++){
 					if(clockcycle.get(clock-1).get(i).getStatus() < Instruction.END){

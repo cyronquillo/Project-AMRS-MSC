@@ -8,7 +8,6 @@ public class Instruction{
 	public static final int EXECUTE = 3;
 	public static final int MEMORY = 4;
 	public static final int WRITEBACK = 5;
-	// public static final int END = 4;
 	public static final int END = 6;
 
  	private static HashSet<String> supportedTypes = new HashSet<String>(4);
@@ -21,18 +20,33 @@ public class Instruction{
 		fillSupportedTypes();
 		String newInst = inst.replaceAll("[,\\s\\n]+", " ");
 		String [] parser = newInst.split(" ");
-		if(parser.length != 3) { 
-			System.out.println("Parsing error!");
+		if(parser.length != 3) {
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tParsing error!");
 			System.exit(0);
 		}
 		if(!Initialization.registers.containsKey(parser[1])){
-			System.out.println("Register error!");
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tFirst operand must contain a correct register: found " + parser[1]);
 			System.exit(0);	
 		}
 		if(!supportedTypes.contains(parser[0])){
-			System.out.println("Cannot find symbol: " + parser[0]);
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tCannot find symbol: " + parser[0]);
 			System.exit(0);	
 		}
+		if(!isNumeric(parser[2]) && !Initialization.registers.containsKey(parser[2])){
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tCannot find symbol: " + parser[2]);
+			System.exit(0);	
+		}
+		// if(isNumeric(parser[2])){
+		// 	int num = Integer.parseInt(parser[2]);
+		// 	if(num > 99 || num < -99){
+		// 		System.out.println("Immediate value out of bounds: " + parser[2]);
+		// 		System.exit(0);	
+		// 	}
+		// }
 		this.status = START;
 		this.stalled = false;
 		this.instructionType = parser[0];
@@ -48,6 +62,9 @@ public class Instruction{
 		this.stalled = copy.stalled;
 	}
 
+	public static boolean isNumeric(String str){
+		return str.matches("-?\\d+");  //match a number with optional '-' and decimal.
+	}
 	private void fillSupportedTypes(){
 		supportedTypes.add("CMP");
 		supportedTypes.add("LOAD");
