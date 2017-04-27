@@ -44,4 +44,20 @@ public class Decode{
 		System.out.println("Operand 2: " + this.operand2);
 
 	}
+
+	public int getOperand1(){
+		return this.operand1;
+	}
+
+	public int getOperand2(){
+		return this.operand2;
+	}
+
+	public String getOperation(){
+		return this.operation;
+	}
+
+	public String getDestination(){
+		return this.dest;
+	}
 }
