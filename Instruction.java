@@ -40,13 +40,13 @@ public class Instruction{
 		this.param2 = parser[2];
 	}
 
-	// public Instruction(Instruction copy){
-	// 	this.instructionType = copy.instructionType;
-	// 	this.param1 = copy.param1;
-	// 	this.param2 = copy.param2;
-	// 	this.status = copy.status;
-	// 	this.stalled = copy.status;
-	// }
+	public Instruction(Instruction copy){
+		this.instructionType = copy.instructionType;
+		this.param1 = copy.param1;
+		this.param2 = copy.param2;
+		this.status = copy.status;
+		this.stalled = copy.stalled;
+	}
 
 	private void fillSupportedTypes(){
 		supportedTypes.add("CMP");

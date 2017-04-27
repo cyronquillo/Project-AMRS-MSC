@@ -14,6 +14,7 @@ public class Initialization{
 		initialize(); // registers
 		readFile(file); //file reading
 		buildClockCycles();
+		outputClockCycleSummary();
 	}
 
 	public static void readFile(String file){
@@ -72,13 +73,25 @@ public class Initialization{
 	public void buildClockCycles(){
 		int clock = 0;
 		int limit;
-		while(instructions.get(instructions.size()-1).getStatus() != Instruction.END){
+
+		do{
 			clockcycle.add(new ArrayList<Instruction>());
-			limit = clock+1 < instructions.size()? clock+1: instructions.size();
-			for(int i = 0; i < limit; i++){
-				if(instructions.get(i).getStatus() < Instruction.END){
-					clockcycle.get(clock).add(instructions.get(i));
+			// limit = clock+1 < instructions.size()? clock+1: instructions.size();
+			// for(int i = 0; i < limit; i++){
+			// 	if(instructions.get(i).getStatus() < Instruction.END){
+			// 		clockcycle.get(clock).add(instructions.get(i));
+			// 	}
+			// }
+			if(clock!= 0){
+				for(int i = 0; i < clockcycle.get(clock-1).size(); i++){
+					if(clockcycle.get(clock-1).get(i).getStatus() < Instruction.END){
+						clockcycle.get(clock).add(new Instruction(clockcycle.get(clock-1).get(i)));
+					}
 				}
+				
+			}
+			if(clock < instructions.size()){
+				clockcycle.get(clock).add(new Instruction(instructions.get(clock)));
 			}
 
 			for(int i = 0; i <  clockcycle.get(clock).size(); i++){
@@ -101,16 +114,25 @@ public class Initialization{
 
 				}				
 			}
-			if(instructions.get(instructions.size()-1).getStatus() != Instruction.END) System.out.println("Clock Cycle " + clock + ": ");
-			for(int i = 0; i < clockcycle.get(clock).size(); i++){
-				clockcycle.get(clock).get(i).printStatus();
-			}
-			// System.out.println(instructions.get(instructions.size()-1).getStatus());
+			// if(clockcycle.get(clock).get(clockcycle.get(clock).size()-1).getStatus() != Instruction.END) System.out.println("Clock Cycle " + clock + ": ");
+			// for(int i = 0; i < clockcycle.get(clock).size(); i++){
+			// 	clockcycle.get(clock).get(i).printStatus();
+			// }
 
 			clock++;
-		}			
+		} while(clockcycle.get(clock-1).get(clockcycle.get(clock-1).size()-1).getStatus() != Instruction.END);
+		clockcycle.remove(clockcycle.size()-1); // extra clock cycle with no instruction content
 	}
 
+
+	public void outputClockCycleSummary(){
+		for(int i = 0; i < clockcycle.size(); i++){
+			System.out.println("Clock Cycle " + i + ": ");
+			for(int j = 0; j < clockcycle.get(i).size(); j++){
+				clockcycle.get(i).get(j).printStatus();
+			}
+		}
+	}
 	public static void store(String reg, int value){
 		registers.replace(reg,value);
 	}
@@ -121,14 +143,12 @@ public class Initialization{
 
 	public boolean checkWAW(Instruction inst1, Instruction inst2){
 		if(inst1.getParam1().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END) {
-			// System.out.println("WAW");
 			return true;
 		}
 		return false;
 	}
 	public boolean checkWAR(Instruction inst1, Instruction inst2){
 		if(inst1.getParam2().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END){
-			// System.out.println("WAR");
 			return true;
 		}
 		
@@ -136,14 +156,12 @@ public class Initialization{
 	}
 	public boolean checkRAW(Instruction inst1, Instruction inst2){
 		if(inst1.getParam1().equals(inst2.getParam2()) && inst1.getStatus() != Instruction.END){
-			// System.out.println("RAW");
 			return true;
 		}
 		return false;
 	}
 	public boolean checkDuplicateStage(Instruction inst1, Instruction inst2){
 		if(inst1.getStatus() == inst2.getStatus() + 1 && !inst1.getStall() && inst1.getStatus() != Instruction.END){
-			// System.out.println("Stage Duplicate");
 			return true;
 		}
 		return false;
