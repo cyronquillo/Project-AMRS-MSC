@@ -137,4 +137,28 @@ public class Instruction{
 		System.out.println(instructionType + "  "  + param1 +  "  " +param2);	
 	}
 
+	public void perform(){
+		// use all the details of the instruction
+		switch(this.status){
+			case FETCH:
+				// perform fetch()
+				break;
+			case DECODE:
+				// perform decode()
+				break;
+			case EXECUTE:
+				// perform execute()
+				break;
+			case MEMORY:
+				// perform memory
+				break;
+			case WRITEBACK:
+				// perform writeback
+				break;
+			default:
+				System.out.println(" ERR");
+
+		}
+	}
+
 }

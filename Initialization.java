@@ -125,36 +125,45 @@ public class Initialization{
 
 	public void outputClockCycleSummary(int cc){
 		int index = cc-1;
-		if(cc == 0) System.out.println ("Clock Cycle 0: START");
-		else System.out.println("Clock Cycle " + (cc) + ": ");
-		if(cc == 0 ) return;
+		if(cc == 0){
+			System.out.println ("Clock Cycle 0: START");
+			return;
+		}
+		System.out.println("Clock Cycle " + (cc) + ": ");
 		for(int j = 0; j < clockcycle.get(index).size(); j++){
 			clockcycle.get(index).get(j).printStatus();
 		}
 	}
 
+	public void performInstructions(int cc){
+		int index = cc-1;
+		for(int j = 0; j < clockcycle.get(index).size(); j++){
+			clockcycle.get(index).get(j).perform();
+		}
+	}
 	public void showClockCycle(){
 		Scanner reader = new Scanner(System.in);
 		int choice = 0;
 		int cc = 0;
 		do{
 
-			outputClockCycleSummary(cc);
-			System.out.println("[1] Next Clock Cycle");
-			System.out.println("[2] Previous Clock Cycle");
-			System.out.println("[0] Exit");
-			System.out.print("Choice: ");
-			choice = reader.nextInt();
+			if(cc + 1 <= clockcycle.size()){
+				outputClockCycleSummary(cc);
+				if(cc != 0){
+					performInstructions(cc);
+				}
+			} 
+			do{
+				if(cc + 1 <= clockcycle.size()) System.out.println("[1] Next Clock Cycle");
+				if(cc + 1 > clockcycle.size()) System.out.println("Done!");
+				System.out.println("[0] Exit");
+				System.out.print("Choice: ");
+				choice = reader.nextInt();
+			}while(choice < 0 || choice > 1);
 
 			switch(choice){
-
 				case 1: 
-						cc= (cc+ 1) % clockcycle.size();
-						clearScreen();
-						break;
-				case 2: 
-						cc-=1;
-						if(cc < 0) cc = clockcycle.size() -1;
+						cc= cc+ 1;
 						clearScreen();
 						break;
 				case 0: 
