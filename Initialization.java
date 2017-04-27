@@ -5,17 +5,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Initialization{
 	public static HashMap<String,Integer> registers = new HashMap<String,Integer>();
 	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 	public static ArrayList<ArrayList<Instruction>> clockcycle= new ArrayList<ArrayList<Instruction>>();
+	public static boolean err = false;
 	public Initialization(String file){
 		initialize(); // registers
 		readFile(file); //file reading
 
 		buildClockCycles();
-		outputClockCycleSummary();
+		showClockCycle();
 	}
 
 	public static void readFile(String file){
@@ -28,6 +30,7 @@ public class Initialization{
 			}
 		}
 		catch(Exception ex){}
+		if(err == true) System.exit(0);
 	}
 
 	public static void initialize(){
@@ -120,13 +123,48 @@ public class Initialization{
 	}
 
 
-	public void outputClockCycleSummary(){
-		for(int i = 0; i < clockcycle.size(); i++){
-			System.out.println("Clock Cycle " + i + ": ");
-			for(int j = 0; j < clockcycle.get(i).size(); j++){
-				clockcycle.get(i).get(j).printStatus();
-			}
+	public void outputClockCycleSummary(int cc){
+		int index = cc-1;
+		if(cc == 0) System.out.println ("Clock Cycle 0: START");
+		else System.out.println("Clock Cycle " + (cc) + ": ");
+		if(cc == 0 ) return;
+		for(int j = 0; j < clockcycle.get(index).size(); j++){
+			clockcycle.get(index).get(j).printStatus();
 		}
+	}
+
+	public void showClockCycle(){
+		Scanner reader = new Scanner(System.in);
+		int choice = 0;
+		int cc = 0;
+		do{
+
+			outputClockCycleSummary(cc);
+			System.out.println("[1] Next Clock Cycle");
+			System.out.println("[2] Previous Clock Cycle");
+			System.out.println("[0] Exit");
+			System.out.print("Choice: ");
+			choice = reader.nextInt();
+
+			switch(choice){
+
+				case 1: 
+						cc= (cc+ 1) % clockcycle.size();
+						clearScreen();
+						break;
+				case 2: 
+						cc-=1;
+						if(cc < 0) cc = clockcycle.size() -1;
+						clearScreen();
+						break;
+				case 0: 
+						System.out.println("Exiting...");
+						break;
+				default:
+						System.out.println("Invalid Input");
+			}
+
+		} while(choice != 0);
 	}
 	public static void store(String reg, int value){
 		registers.replace(reg,value);
@@ -161,5 +199,10 @@ public class Initialization{
 		}
 		return false;
 	}
+
+	public static void clearScreen() {  
+    	System.out.print("\033[H\033[2J");  
+    	System.out.flush();  
+   	}  
 	
 }

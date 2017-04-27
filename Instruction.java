@@ -23,22 +23,26 @@ public class Instruction{
 		if(parser.length != 3) {
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tParsing error!");
-			System.exit(0);
+			Initialization.err = true;
+			return ;
 		}
 		if(!Initialization.registers.containsKey(parser[1])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tFirst operand must contain a correct register: found " + parser[1]);
-			System.exit(0);	
+			Initialization.err = true;
+			return ;
 		}
 		if(!supportedTypes.contains(parser[0])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tCannot find symbol: " + parser[0]);
-			System.exit(0);	
+			Initialization.err = true;
+			return ;
 		}
 		if(!isNumeric(parser[2]) && !Initialization.registers.containsKey(parser[2])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tCannot find symbol: " + parser[2]);
-			System.exit(0);	
+			Initialization.err = true;
+			return ;
 		}
 		// if(isNumeric(parser[2])){
 		// 	int num = Integer.parseInt(parser[2]);
