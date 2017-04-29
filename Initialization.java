@@ -112,14 +112,9 @@ public class Initialization{
 
 				}				
 			}
-			// if(clockcycle.get(clock).get(clockcycle.get(clock).size()-1).getStatus() != Instruction.END) System.out.println("Clock Cycle " + clock + ": ");
-			// for(int i = 0; i < clockcycle.get(clock).size(); i++){
-			// 	clockcycle.get(clock).get(i).printStatus();
-			// }
 
 			clock++;
 		} while(clockcycle.get(clock-1).get(clockcycle.get(clock-1).size()-1).getStatus() != Instruction.END);
-		clockcycle.remove(clockcycle.size()-1); // extra clock cycle with no instruction content
 	}
 
 
@@ -137,8 +132,12 @@ public class Initialization{
 
 	public void performInstructions(int cc){
 		int index = cc-1;
-		for(int j = 0; j < clockcycle.get(index).size(); j++){
-			clockcycle.get(index).get(j).perform();
+		for(int i = 5; i > 0; i--){
+			for(int j = 0; j < clockcycle.get(index).size(); j++){
+				if(clockcycle.get(index).get(j).getStatus() == i){ // avoiding asynchronous stage processing
+					clockcycle.get(index).get(j).perform();
+				}
+			}
 		}
 	}
 	public void showClockCycle(){

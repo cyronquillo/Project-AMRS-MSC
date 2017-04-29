@@ -142,17 +142,22 @@ public class Instruction{
 		switch(this.status){
 			case FETCH:
 				// perform fetch()
+				// System.out.println("fetching");
 				break;
 			case DECODE:
 				// perform decode()
+				// System.out.println("decoding");
 				break;
 			case EXECUTE:
+				// System.out.println("executing");
 				// perform execute()
 				break;
 			case MEMORY:
+				// System.out.println("memory");
 				// perform memory
 				break;
 			case WRITEBACK:
+				// System.out.println("writeback");
 				// perform writeback
 				break;
 			default:
