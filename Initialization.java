@@ -8,11 +8,43 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Initialization{
+	public static Integer PC;
+		/*since PC holds the address of the instruction to be executed, 
+		PC will be holding the index of the instruction based on the 
+		instructions arraylist*/
+	public static Integer MAR;
+		/*MAR will be holding the address of the current instruction
+		being executed, so MAR will be holding an index of the 
+		instruction based on the instructions arraylist*/
+	public static Instruction MBR;
+		/*MBR will be holding the current instruction being executed
+		so MAR will serve as a pointer of the instruction being executed*/
+	public static boolean OF;
+		/*OF is the Overflow Flag that changes its value during Execution
+		Stage. 
+		0 = false
+		1 = true
+		*/
+	public static boolean ZF;
+		/* ZF is the zeroflag that changes in the Execution stage of CMP
+		Instruction. 
+		0 = false = when the 2 values being compared are not equal
+		1 = true = when 2 values being compared are equal
+		*/
+	public static boolean NF;
+		/* NF is the negative flag that changes in the Execution stage of 
+		CMP Instruction. 
+		0 = false = param1 > param2
+		1 == true = param1 < param2
+		*/	
 	public static HashMap<String,Integer> registers = new HashMap<String,Integer>();
 	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 	public static ArrayList<ArrayList<Instruction>> clockcycle= new ArrayList<ArrayList<Instruction>>();
 	public static boolean err = false;
 	public Initialization(String file){
+		OF = false;
+		ZF = false;
+		NF = false;
 		initialize(); // registers
 		readFile(file); //file reading
 
@@ -66,12 +98,6 @@ public class Initialization{
 		registers.put("R30",0);
 		registers.put("R31",0);
 		registers.put("R32",0);
-		registers.put("PC",0);
-		registers.put("MAR",0);
-		registers.put("MBR",0);
-		registers.put("OF",0);
-		registers.put("NF",0);
-		registers.put("ZF",0);
 	}
 
 	public void buildClockCycles(){
@@ -127,6 +153,7 @@ public class Initialization{
 		System.out.println("Clock Cycle " + (cc) + ": ");
 		for(int j = 0; j < clockcycle.get(index).size(); j++){
 			clockcycle.get(index).get(j).printStatus();
+			System.out.println(clockcycle.get(index).indexOf(clockcycle.get(index).get(j)));
 		}
 	}
 
