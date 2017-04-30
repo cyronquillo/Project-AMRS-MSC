@@ -43,7 +43,7 @@ public class Initialization{
 	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 	public static ArrayList<ArrayList<Instruction>> clockcycle= new ArrayList<ArrayList<Instruction>>();
 	public static boolean err = false; // flag to terminate program when syntax errors are met
-	
+	public static Integer stallCounter;
 
 	/*STAGES*/
 	public static Fetch fetch = new Fetch();
@@ -55,6 +55,7 @@ public class Initialization{
 
 
 	public Initialization(String file){
+		stallCounter = 0;
 		PC = 0;
 		OF = true; // setting flags to default value
 		ZF = false;
@@ -120,9 +121,10 @@ public class Initialization{
 	public void buildClockCycles(){
 		int clock = 0;
 		int limit;
-
+		int stalled;
 		do{
 			clockcycle.add(new ArrayList<Instruction>());
+			stalled = 0;
 			if(clock!= 0){
 				for(int i = 0; i < clockcycle.get(clock-1).size(); i++){
 					if(clockcycle.get(clock-1).get(i).getStatus() < Instruction.END){
@@ -137,6 +139,7 @@ public class Initialization{
 
 			for(int i = 0; i <  clockcycle.get(clock).size(); i++){
 				clockcycle.get(clock).get(i).setStall(false);
+				clockcycle.get(clock).get(i).setHazard("");
 				for(int j = 0; j < i; j++){
 					if(clockcycle.get(clock).get(i).getStatus() == Instruction.START) break;
 					if( checkRAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i)) || 
@@ -144,6 +147,7 @@ public class Initialization{
 								checkWAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i)) || 
 								checkDuplicateStage(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i))) {
 						clockcycle.get(clock).get(i).setStall(true);
+						stalled = 1;
 						break;
 					}
 
@@ -155,7 +159,7 @@ public class Initialization{
 
 				}				
 			}
-
+			stallCounter += stalled;
 			clock++;
 		} while(clockcycle.get(clock-1).get(clockcycle.get(clock-1).size()-1).getStatus() != Instruction.END);
 	}
@@ -209,9 +213,12 @@ public class Initialization{
 			} 
 			do{
 				prevCC = cc;
+				if(cc + 1 > clockcycle.size()){
+					System.out.println("Done!");
+					System.out.println("Total Stalls:" + stallCounter);
+				}
 				if(cc + 1 <= clockcycle.size()) System.out.println("[1] Next Clock Cycle");
 				System.out.println("[2] Display Registers");
-				if(cc + 1 > clockcycle.size()) System.out.println("Done!");
 				System.out.println("[0] Exit");
 				System.out.print("Choice: ");
 				choice = reader.nextInt();
@@ -244,12 +251,14 @@ public class Initialization{
 
 	public boolean checkWAW(Instruction inst1, Instruction inst2){
 		if(inst1.getParam1().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END) {
+			inst2.setHazard("WAW");
 			return true;
 		}
 		return false;
 	}
 	public boolean checkWAR(Instruction inst1, Instruction inst2){
 		if(inst1.getParam2().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END){
+			inst2.setHazard("WAR");
 			return true;
 		}
 		
@@ -257,12 +266,14 @@ public class Initialization{
 	}
 	public boolean checkRAW(Instruction inst1, Instruction inst2){
 		if(inst1.getParam1().equals(inst2.getParam2()) && inst1.getStatus() != Instruction.END){
+			inst2.setHazard("RAW");
 			return true;
 		}
 		return false;
 	}
 	public boolean checkDuplicateStage(Instruction inst1, Instruction inst2){
 		if(inst1.getStatus() == inst2.getStatus() + 1 && !inst1.getStall() && inst1.getStatus() != Instruction.END){
+			inst2.setHazard("Stage on Use");
 			return true;
 		}
 		return false;

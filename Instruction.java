@@ -16,6 +16,7 @@ public class Instruction{
 	private String param2;
 	private int status;
 	private boolean stalled;
+	private String hazard;
 	private int address;
 	public Instruction(String inst, int address){
 		fillSupportedTypes();
@@ -86,7 +87,9 @@ public class Instruction{
 	public void setStatus(int status){
 		this.status = status;
 	}
-
+	public void setHazard(String hazard){
+		this.hazard = hazard;
+	}
 	public void printStatus(){
 		if(this.status != END){
 			System.out.print("\t" +instructionType + "  "  + param1 +  "  " +param2 + ": " );	
