@@ -56,7 +56,7 @@ public class Initialization{
 
 	public Initialization(String file){
 		PC = 0;
-		OF = false; // setting flags to default value
+		OF = true; // setting flags to default value
 		ZF = false;
 		NF = false;
 
