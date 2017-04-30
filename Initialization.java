@@ -36,15 +36,31 @@ public class Initialization{
 		CMP Instruction. 
 		0 = false = param1 > param2
 		1 == true = param1 < param2
-		*/	
+		*/
+
+
 	public static HashMap<String,Integer> registers = new HashMap<String,Integer>();
 	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 	public static ArrayList<ArrayList<Instruction>> clockcycle= new ArrayList<ArrayList<Instruction>>();
-	public static boolean err = false;
+	public static boolean err = false; // flag to terminate program when syntax errors are met
+	
+
+	/*STAGES*/
+	public static Fetch fetch = new Fetch();
+	// public static Decode decode = new Decode();
+	// public static Execute execute = new Execute();
+	// public static Memory memory = new Memory();
+	// public static Writeback writeback = new Writeback();
+	/*END OF STAGES*/	
+
+
 	public Initialization(String file){
-		OF = false;
+		PC = 0;
+		OF = false; // setting flags to default value
 		ZF = false;
 		NF = false;
+
+
 		initialize(); // registers
 		readFile(file); //file reading
 
@@ -56,8 +72,9 @@ public class Initialization{
 		try{
 			BufferedReader input = new BufferedReader (new FileReader (file));
 			String line;
+			int counter = 0;
 			while((line= input.readLine())!= null){
-				Instruction inst = new Instruction(line.toUpperCase());
+				Instruction inst = new Instruction(line.toUpperCase(), counter++);
 				instructions.add(inst);
 			}
 		}
@@ -153,7 +170,6 @@ public class Initialization{
 		System.out.println("Clock Cycle " + (cc) + ": ");
 		for(int j = 0; j < clockcycle.get(index).size(); j++){
 			clockcycle.get(index).get(j).printStatus();
-			System.out.println(clockcycle.get(index).indexOf(clockcycle.get(index).get(j)));
 		}
 	}
 
@@ -167,25 +183,39 @@ public class Initialization{
 			}
 		}
 	}
+	public void implicitRegisters(){
+		System.out.println("PC: " + PC);
+		System.out.println("MAR: " + MAR);
+		System.out.print("MBR: ");
+
+		if(MBR == null) System.out.println("null");
+		else MBR.printInstruction();
+		System.out.println("OF: " + OF);
+		System.out.println("ZF: " + ZF);
+		System.out.println("NF: " + NF);
+	}
 	public void showClockCycle(){
 		Scanner reader = new Scanner(System.in);
 		int choice = 0;
 		int cc = 0;
+		int prevCC = -1;
 		do{
 
 			if(cc + 1 <= clockcycle.size()){
 				outputClockCycleSummary(cc);
-				if(cc != 0){
+				if(cc != 0 && cc != prevCC){
 					performInstructions(cc);
 				}
 			} 
 			do{
+				prevCC = cc;
 				if(cc + 1 <= clockcycle.size()) System.out.println("[1] Next Clock Cycle");
+				System.out.println("[2] Display Registers");
 				if(cc + 1 > clockcycle.size()) System.out.println("Done!");
 				System.out.println("[0] Exit");
 				System.out.print("Choice: ");
 				choice = reader.nextInt();
-			}while(choice < 0 || choice > 1);
+			}while(choice < 0 || choice > 2);
 
 			switch(choice){
 				case 1: 
@@ -194,6 +224,9 @@ public class Initialization{
 						break;
 				case 0: 
 						System.out.println("Exiting...");
+						break;
+				case 2:
+						implicitRegisters();
 						break;
 				default:
 						System.out.println("Invalid Input");

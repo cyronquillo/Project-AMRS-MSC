@@ -16,8 +16,10 @@ public class Instruction{
 	private String param2;
 	private int status;
 	private boolean stalled;
-	public Instruction(String inst){
+	private int address;
+	public Instruction(String inst, int address){
 		fillSupportedTypes();
+		this.address = address;
 		String newInst = inst.replaceAll("[,\\s\\n]+", " ");
 		String [] parser = newInst.split(" ");
 		if(parser.length != 3) {
@@ -64,6 +66,7 @@ public class Instruction{
 		this.param2 = copy.param2;
 		this.status = copy.status;
 		this.stalled = copy.stalled;
+		this.address = copy.address;
 	}
 
 	public static boolean isNumeric(String str){
@@ -132,7 +135,9 @@ public class Instruction{
 	public boolean getStall(){
 		return this.stalled;
 	}
-
+	public int getAddress(){
+		return this.address;
+	}
 	public void printInstruction(){
 		System.out.println(instructionType + "  "  + param1 +  "  " +param2);	
 	}
@@ -141,22 +146,25 @@ public class Instruction{
 		// use all the details of the instruction
 		switch(this.status){
 			case FETCH:
-				// perform fetch()
+				Initialization.fetch.process(this);
 				// System.out.println("fetching");
 				break;
 			case DECODE:
-				// perform decode()
+				// Initialization.decode.process(this)
 				// System.out.println("decoding");
 				break;
 			case EXECUTE:
+				// Initialization.execute.process(this)
 				// System.out.println("executing");
 				// perform execute()
 				break;
 			case MEMORY:
+				// Initialization.memory.process(this)
 				// System.out.println("memory");
 				// perform memory
 				break;
 			case WRITEBACK:
+				// Initialization.writeback.process(this)
 				// System.out.println("writeback");
 				// perform writeback
 				break;
