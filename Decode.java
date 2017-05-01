@@ -16,7 +16,7 @@ public class Decode{
 		else this.op2 = Integer.parseInt(toDecode.getParam2());
 
 		Initialization.CIR = toDecode.getInstructionType();
-		printResult();
+		// printResult();
 	}
 
 	public boolean isRegister(String op){
@@ -32,5 +32,15 @@ public class Decode{
 		System.out.println("Operand 1: " + op1Val);
 		System.out.println("Operand 2: " + op2);
 	}
+
+
+	public int getOp1Val(){
+		return this.op1Val;
+	}
+
+	public int getOp2Val(){
+		return this.op2;
+	}
+
 
 }
