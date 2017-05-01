@@ -52,7 +52,7 @@ public class Initialization{
 	/*STAGES*/
 	public static Fetch fetch = new Fetch();
 	public static Decode decode = new Decode();
-	// public static Execute execute = new Execute();
+	 public static Execute execute = new Execute();
 	// public static Memory memory = new Memory();
 	// public static Writeback writeback = new Writeback();
 	/*END OF STAGES*/	

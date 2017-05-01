@@ -157,7 +157,7 @@ public class Instruction{
 				// System.out.println("decoding");
 				break;
 			case EXECUTE:
-				// Initialization.execute.process(this)
+				Initialization.execute.process();
 				// System.out.println("executing");
 				// perform execute()
 				break;
