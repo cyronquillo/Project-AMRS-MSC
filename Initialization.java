@@ -61,7 +61,7 @@ public class Initialization{
 	public Initialization(String file){
 		stallCounter = 0;
 		PC = 0;
-		OF = true; // setting flags to default value
+		OF = false; // setting flags to default value
 		ZF = false;
 		NF = false;
 
@@ -237,6 +237,7 @@ public class Initialization{
 						System.out.println("Exiting...");
 						break;
 				case 2:
+						clearScreen();
 						implicitRegisters();
 						break;
 				default:

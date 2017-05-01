@@ -2,7 +2,7 @@
 package instantiation;
 public class Decode{
 
-	private int op1Var;
+	private String op1Var;
 	private int op1Val;
 	private int op2;
 
