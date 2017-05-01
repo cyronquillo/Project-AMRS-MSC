@@ -153,7 +153,7 @@ public class Instruction{
 				// System.out.println("fetching");
 				break;
 			case DECODE:
-				// Initialization.decode.process(this)
+				Initialization.decode.process(this);
 				// System.out.println("decoding");
 				break;
 			case EXECUTE:

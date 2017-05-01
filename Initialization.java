@@ -37,6 +37,10 @@ public class Initialization{
 		0 = false = param1 > param2
 		1 == true = param1 < param2
 		*/
+	public static String CIR;
+		/* CIR, which is the current instruction register, contains the 
+		information specifying the instruction being performed. 
+		*/
 
 
 	public static HashMap<String,Integer> registers = new HashMap<String,Integer>();
@@ -47,7 +51,7 @@ public class Initialization{
 
 	/*STAGES*/
 	public static Fetch fetch = new Fetch();
-	// public static Decode decode = new Decode();
+	public static Decode decode = new Decode();
 	// public static Execute execute = new Execute();
 	// public static Memory memory = new Memory();
 	// public static Writeback writeback = new Writeback();
