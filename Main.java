@@ -5,4 +5,4 @@ public class Main{
 				
 		Initialization start = new Initialization("input/input.txt");
 	}
-}
+}	
