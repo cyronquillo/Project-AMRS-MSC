@@ -1,0 +1,6 @@
+				0	1	2	3	4	5	6	7	8	9	10	11	12	13						
+LOAD R1,5		F	D	E	M	W													
+LOAD R2,1			F	D	E	M	W										
+ADD R1,R2				F	S	S	S	D	E	M	W									
+SUB R3,R5					F	D	E	M	W										
+CMP R1,R2						F	S	S	S	S	S	D	E	M	W		 			

@@ -1,47 +1,35 @@
+
 package instantiation;
-
 public class Decode{
-	private String operation;
-	private String dest;
-	private int operand1;
-	private int operand2;
 
-	public Decode(){
+	public static int op1;
+	public static int op2;
 
+	public Decode(){}
+
+	public void process(Instruction toDecode){
+
+		this.op1 = getRegisterValue(toDecode.getParam1());
+
+		if(isRegister(toDecode.getParam2())) this.op2 = getRegisterValue(toDecode.getParam2());
+		else this.op2 = Integer.parseInt(toDecode.getParam2());
+
+		Initialization.CIR = toDecode.getInstructionType();
+		printResult();
 	}
 
-	public void decode(Initialization start, int index){
-		String op1 = start.instructions.get(index).getParam1();
-		String op2 = start.instructions.get(index).getParam2();
-
-		this.operation = start.instructions.get(index).getInstType();
-		this.dest = op1;
-
-		if(!this.operation.equals("LOAD")) {
-			this.operand1 =  getRegisterValue(start,op1);
-		}
-
-		if(isRegister(start,op2)) {
-			this.operand2 =  getRegisterValue(start,op2);
-		}
-		else {
-			this.operand2 = Integer.parseInt(op2);
-		}
+	public boolean isRegister(String op){
+		return Initialization.registers.containsKey(op);
 	}
 
-	public boolean isRegister(Initialization start, String op){
-		return start.registers.containsKey(op);
+	public int getRegisterValue(String op){
+		return Initialization.registers.get(op);
 	}
 
-	public int getRegisterValue(Initialization start, String op){
-		return start.registers.get(op);
+	public void printResult(){
+		System.out.println("Operation: " + Initialization.CIR);
+		System.out.println("Operand 1: " + op1);
+		System.out.println("Operand 2: " + op2);
 	}
 
-	public void printDecoded(){
-		System.out.println("\nOperation: " + this.operation);
-		System.out.println("Destination: " + this.dest);
-		System.out.println("Operand 1: " + this.operand1);
-		System.out.println("Operand 2: " + this.operand2);
-
-	}
 }
