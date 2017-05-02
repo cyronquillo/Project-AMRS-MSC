@@ -1,4 +1,4 @@
-March 30 		No Exercise
+March 30 		No Exercise 
 April 06		ILP Exercise
 April 13		No Class
 April 20		Tomasulo's Algo Exer
