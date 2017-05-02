@@ -162,7 +162,7 @@ public class Instruction{
 				// perform execute()
 				break;
 			case MEMORY:
-				// Initialization.memory.process(this)
+				// Initialization.memory.process();
 				// System.out.println("memory");
 				// perform memory
 				break;

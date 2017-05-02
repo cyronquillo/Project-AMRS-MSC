@@ -42,5 +42,9 @@ public class Decode{
 		return this.op2;
 	}
 
+	public String getDest(){
+		return this.op1Var;
+	}
+
 
 }

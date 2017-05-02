@@ -6,7 +6,8 @@ public class Execute{
 	private boolean setZF;
 	private boolean setOF;
 	private boolean setNF;
-	
+	private String operation;
+	private String destination;
 
 	public Execute(){
 		this.setZF = false;
@@ -17,11 +18,14 @@ public class Execute{
 	}
 
 	public void process(){
+		destination = Initialization.decode.getDest();
+		this.value = 100; // reset since execution in Inst 1 is independent of execution in Inst 2
+		int test;
 		// use cir
-		String operand = Initialization.CIR;
+		operation = Initialization.CIR;
 		int op1 = Initialization.decode.getOp1Val();
 		int op2 = Initialization.decode.getOp2Val();
-		switch(operand){
+		switch(operation){
 			case "ADD": this.value = performAdd(op1, op2);
 						this.setOF = isOverflow(this.value);
 						break;
@@ -31,9 +35,9 @@ public class Execute{
 			case "LOAD": this.value = performLoad(op2);
 						this.setOF = isOverflow(this.value);
 						break;
-			case "CMP": this.value = performSub(op1,op2);
-						this.setZF = isZero(this.value);
-						this.setNF = isNegative(this.value);
+			case "CMP": test = performSub(op1,op2);
+						this.setZF = isZero(test);
+						this.setNF = isNegative(test);
 						break;
 		}
 	}
@@ -54,6 +58,9 @@ public class Execute{
 		return (value == 0 ? true:false);
 	}
 
+	public boolean isNegative(int value){
+		return (value < 0 ? true:false);
+	}
 
 	public boolean isOverflow(int value){
 		if(value > 99){
@@ -66,9 +73,6 @@ public class Execute{
 		return false;
 	}
 
-	public boolean isNegative(int value){
-		return (value < 0 ? true:false);
-	}
 
 	public int getValue(){
 		return this.value;
@@ -85,6 +89,12 @@ public class Execute{
 	public boolean getNF(){
 		return this.setNF;
 	}
+
+	public String getDestination(){
+		return this.destination;
+	}
+
+
 }
 
 

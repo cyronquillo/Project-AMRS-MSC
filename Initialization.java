@@ -238,6 +238,7 @@ public class Initialization{
 						break;
 				case 2:
 						clearScreen();
+						// outputClockCycleSummary(cc);
 						implicitRegisters();
 						break;
 				default:
