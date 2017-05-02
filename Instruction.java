@@ -162,12 +162,12 @@ public class Instruction{
 				// perform execute()
 				break;
 			case MEMORY:
-				// Initialization.memory.process();
+				Initialization.memory.process();
 				// System.out.println("memory");
 				// perform memory
 				break;
 			case WRITEBACK:
-				// Initialization.writeback.process(this)
+				Initialization.writeback.process();
 				// System.out.println("writeback");
 				// perform writeback
 				break;
