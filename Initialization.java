@@ -52,7 +52,7 @@ public class Initialization{
 	/*STAGES*/
 	public static Fetch fetch = new Fetch();
 	public static Decode decode = new Decode();
-	 public static Execute execute = new Execute();
+	public static Execute execute = new Execute();
 	// public static Memory memory = new Memory();
 	// public static Writeback writeback = new Writeback();
 	/*END OF STAGES*/	
@@ -191,7 +191,7 @@ public class Initialization{
 			}
 		}
 	}
-	public void implicitRegisters(){
+	public void printRegisters(){
 		System.out.println("PC: " + PC);
 		System.out.println("MAR: " + MAR);
 		System.out.print("MBR: ");
@@ -201,6 +201,10 @@ public class Initialization{
 		System.out.println("OF: " + OF);
 		System.out.println("ZF: " + ZF);
 		System.out.println("NF: " + NF);
+
+		for(int i = 1; i < 33; i++){
+			System.out.println("R"+i+": " + registers.get("R" + i));
+		}
 	}
 	public void showClockCycle(){
 		Scanner reader = new Scanner(System.in);
@@ -238,8 +242,7 @@ public class Initialization{
 						break;
 				case 2:
 						clearScreen();
-						// outputClockCycleSummary(cc);
-						implicitRegisters();
+						printRegisters();
 						break;
 				default:
 						System.out.println("Invalid Input");
