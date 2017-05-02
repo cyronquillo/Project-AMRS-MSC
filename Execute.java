@@ -24,18 +24,17 @@ public class Execute{
 		switch(operand){
 			case "ADD": this.value = performAdd(op1, op2);
 						this.setOF = isOverflow(this.value);
-			break;
+						break;
 			case "SUB": this.value = performSub(op1,op2);
 						this.setOF = isOverflow(this.value);
-			break;
+						break;
 			case "LOAD": this.value = performLoad(op2);
 						this.setOF = isOverflow(this.value);
-			break;
+						break;
 			case "CMP": this.value = performSub(op1,op2);
 						this.setZF = isZero(this.value);
 						this.setNF = isNegative(this.value);
-			break;
-
+						break;
 		}
 	}
 
@@ -57,7 +56,14 @@ public class Execute{
 
 
 	public boolean isOverflow(int value){
-		return ((value>99 || value <-99) ? true:false);
+		if(value > 99){
+			this.value = 99;
+			return true;
+		} else if(value < -99){
+			this.value = -99;
+			return true;
+		}
+		return false;
 	}
 
 	public boolean isNegative(int value){
