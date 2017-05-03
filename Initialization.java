@@ -57,7 +57,7 @@ public class Initialization{
 	public static Writeback writeback = new Writeback();
 	/*END OF STAGES*/	
 
-
+	public String[][] data;
 	public Initialization(String file){
 		stallCounter = 0;
 		PC = 0;
@@ -191,6 +191,20 @@ public class Initialization{
 			}
 		}
 	}
+
+	public void hazardsEncountered(int cc){
+		if(cc == 0) return;
+		int index = cc-1;
+		boolean noHazard = true;
+		for(int j = 0; j < clockcycle.get(index).size(); j++){
+				if(clockcycle.get(index).get(j).getStall()){
+					if(noHazard) System.out.println("Hazards: ");
+					System.out.println("\t"+clockcycle.get(index).get(j).getHazard());
+					noHazard = false;
+				}
+		}
+		if(noHazard) System.out.println("No Hazards for this Clock Cycle");
+	}
 	public void printRegisters(){
 		System.out.println("PC: " + PC);
 		System.out.println("MAR: " + MAR);
@@ -224,13 +238,15 @@ public class Initialization{
 				if(cc + 1 > clockcycle.size()){
 					System.out.println("Done!");
 					System.out.println("Total Stalls:" + stallCounter);
+					System.out.println("Total Clock Cycles: " +(cc-1));
 				}
 				if(cc + 1 <= clockcycle.size()) System.out.println("[1] Next Clock Cycle");
 				System.out.println("[2] Display Registers");
+				System.out.println("[3] Display Hazards");
 				System.out.println("[0] Exit");
 				System.out.print("Choice: ");
 				choice = reader.nextInt();
-			}while(choice < 0 || choice > 2);
+			}while(choice < 0 || choice > 3);
 
 			switch(choice){
 				case 1: 
@@ -243,6 +259,10 @@ public class Initialization{
 				case 2:
 						clearScreen();
 						printRegisters();
+						break;
+				case 3:
+						clearScreen();
+						hazardsEncountered(cc);
 						break;
 				default:
 						System.out.println("Invalid Input");
@@ -294,4 +314,31 @@ public class Initialization{
     	System.out.flush();  
    	}  
 	
+
+	public void populateTable(){
+		int x = instructions.size();
+		int y = clockcycle.size();
+		data = new String[x][y+1];
+		System.out.println(clockcycle.size());
+		for(int i = 0; i < x; i++){
+			for(int j = 0; j < y; j++){
+				data[i][j] = " ";
+			}
+		}
+		for(int i = 0; i < x; i++){
+			data[i][0] = instructions.get(i).getInstruction();
+		}
+		for(int i = 0; i < y-1; i++){
+			for(int j = 0; j < clockcycle.get(i).size(); j++){
+				data[clockcycle.get(i).get(j).getAddress()][i+1] = clockcycle.get(i).get(j).getStage();
+			}
+		}
+
+		for(int i = 0; i < x; i++){
+			for(int j = 0; j < y; j++){
+				System.out.print(data[i][j] +" ");
+			}
+			System.out.println();
+		}
+	}
 }

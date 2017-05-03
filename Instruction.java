@@ -90,6 +90,9 @@ public class Instruction{
 	public void setHazard(String hazard){
 		this.hazard = hazard;
 	}
+	public String getHazard(){
+		return this.hazard;
+	}
 	public void printStatus(){
 		if(this.status != END){
 			System.out.print("\t" +instructionType + "  "  + param1 +  "  " +param2 + ": " );	
@@ -143,6 +146,29 @@ public class Instruction{
 	}
 	public void printInstruction(){
 		System.out.println(instructionType + "  "  + param1 +  "  " +param2);	
+	}
+	public String getStage(){
+		if(this.stalled == true) return "S";
+		switch(this.status){
+			case FETCH:
+				return "F";
+			case DECODE:
+				return "D";
+			case EXECUTE:
+				return "E";
+				
+			case MEMORY:
+				return "M";
+				
+			case WRITEBACK:
+				return "W";
+			default:
+				return "";
+
+		}
+	}
+	public String getInstruction(){
+		return instructionType + " " + param1 +", " + param2;
 	}
 
 	public void perform(){
