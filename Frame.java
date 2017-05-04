@@ -7,6 +7,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -20,39 +22,54 @@ public class Frame extends JFrame{
 	public static JScrollPane scroll2 = new JScrollPane();
 	String[] column;
 	String[] column1 = {"Register", "Value"};
+	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		
 
 	public static Initialization start = new Initialization("input/input.txt"); 
 	public Frame(){
 		super("Project AMRS");
-		this.setPreferredSize(new Dimension(1000,700));
+		this.setPreferredSize(new Dimension(1000,900));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		panel.setLayout(null);
+
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
 		start.populateTable();
 		buildColumns();
 
 		start.populateValues();
 
+		
+
 		JTable table1 = new JTable(start.data, column); // creates a table for training data
 		table1.setEnabled(false);
 		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
+		table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scroll1.setViewportView(table1);
 		scroll1.setBounds(50,80,900,150);
 		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
 		panel.add(scroll1);
 
-		// JButton file = new JButton("Choose File");
-		// panel.add(file);
+		// creates button that enables user to choose a file 
+		JButton file = new JButton("Choose File");
+		file.setBounds(800, 20, 150, 30);
+		panel.add(file);
 
-		JTable table2 = new JTable();
+		JButton next = new JButton("Next");
+		next.setBounds(450, 40, 100, 30);
+		panel.add(next);
+
+		JTable table2 = new JTable(start.dataReg, column1);
 		table2.setEnabled(false);
+		table2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		scroll2.setViewportView(table2);
-		scroll2.setBounds(50,300,100,200);
+		scroll2.setBounds(50,250,200,534);
 		panel.add(scroll2);
-		// table1.getColumnModel().getColumn(0).setPreferredWidth(200);
-		// table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+
 
 		this.setContentPane(panel);
 		this.setFocusable(true);
@@ -72,4 +89,6 @@ public class Frame extends JFrame{
 			column[i] = i +"";
 		}
 	}
+
+
 }
