@@ -48,7 +48,7 @@ public class Frame extends JFrame{
 
 
 	public void buildColumns(){
-		int x = Initialization.clockcycle.size()+1;
+		int x = Initialization.clcy.clockcycle.size()+1;
 		column = new String[x];
 		column[0] = "Instructions";
 		for(int i = 1; i < x; i++){
