@@ -44,6 +44,8 @@ public class Frame extends JFrame{
 		this.pack();																// packs the this
         this.setVisible(true);														// makes the this visible
         this.setLocationRelativeTo(null);
+		Initialization.clcy.showClockCycle();
+
 	}
 
 
