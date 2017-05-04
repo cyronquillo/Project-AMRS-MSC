@@ -69,7 +69,7 @@ public class Initialization{
 		readFile(file); //file reading
 
 		clcy.buildClockCycles();
-		clcy.showClockCycle();
+		// clcy.showClockCycle();
 	}
 
 	public static void readFile(String file){

@@ -54,9 +54,17 @@ public class ClockCycle{
 			}
 			stallCounter += stalled;
 			clock++;
-		} while(clockcycle.get(clock-1).get(clockcycle.get(clock-1).size()-1).getStatus() != Instruction.END);
+		} while(!allInstructionsDone(clock));
 	}
 
+	public boolean allInstructionsDone(int clock){
+		int size = clockcycle.get(clock-1).size();
+		for(int i = 0; i<size; i++){
+			if(clockcycle.get(clock-1).get(i).getStatus() != Instruction.END) return false;
+		}
+		return true;
+		// clockcycle.get(clock-1).get(clockcycle.get(clock-1).size()-1).getStatus() != Instruction.END
+	}
 	public void outputClockCycleSummary(int cc){
 		int index = cc-1;
 		if(cc == 0){
