@@ -7,6 +7,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -26,46 +28,58 @@ public class Frame extends JFrame{
 	String[] column2 = {"Address", "Instruction"};
 	String[] column3 = {"Flag", "Values"};
 	String[] column4 = {"HAZARDS", "#"};
-
+	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		
 	public static Initialization start = new Initialization("input/input.txt"); 
 	public Frame(){
 		super("Project AMRS");
-		this.setPreferredSize(new Dimension(1000,700));
+		this.setPreferredSize(new Dimension(1000,900));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		panel.setLayout(null);
+
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
 		start.populateTable();
 		buildColumns();
 
 		start.populateValues();
 
+		
+
 		JTable table1 = new JTable(start.data, column); // creates a table for training data
 		table1.setEnabled(false);
 		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
+		table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scroll1.setViewportView(table1);
 		scroll1.setBounds(50,80,900,150);
 		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
 		panel.add(scroll1);
 
-		// JButton file = new JButton("Choose File");
-		// panel.add(file);
+		// creates button that enables user to choose a file 
+		JButton file = new JButton("Choose File");
+		file.setBounds(800, 20, 150, 30);
+		panel.add(file);
 
-		JTable table2 = new JTable();
+		JButton next = new JButton("Next");
+		next.setBounds(450, 40, 100, 30);
+		panel.add(next);
+
+		JTable table2 = new JTable(start.dataReg, column1);
 		table2.setEnabled(false);
+		table2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		scroll2.setViewportView(table2);
-		scroll2.setBounds(50,300,100,200);
+		scroll2.setBounds(50,250,200,534);
 		panel.add(scroll2);
-		// table1.getColumnModel().getColumn(0).setPreferredWidth(200);
-		// table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		JTable table3 = new JTable(start.dataInst,column2);
 		table3.setEnabled(false);
 		table3.getColumnModel().getColumn(0).setPreferredWidth(180);
 		table3.getColumnModel().getColumn(1).setPreferredWidth(300);
 		scroll3.setViewportView(table3);
-		scroll3.setBounds(250,300,150,200);
+		scroll3.setBounds(585,250,150,200);
 		panel.add(scroll3);
 
 		JTable table4 = new JTable(start.dataFlags,column3);
@@ -73,7 +87,7 @@ public class Frame extends JFrame{
 		table4.getColumnModel().getColumn(0).setPreferredWidth(300);
 		table4.getColumnModel().getColumn(1).setPreferredWidth(180);
 		scroll4.setViewportView(table4);
-		scroll4.setBounds(450,300,150,70);
+		scroll4.setBounds(800,250,150,70);
 		panel.add(scroll4);
 
 		JTable table5 = new JTable(start.dataHazards,column4);
@@ -81,7 +95,7 @@ public class Frame extends JFrame{
 		table5.getColumnModel().getColumn(0).setPreferredWidth(300);
 		table5.getColumnModel().getColumn(1).setPreferredWidth(180);
 		scroll5.setViewportView(table5);
-		scroll5.setBounds(650,300,150,86);
+		scroll5.setBounds(800,365,150,86);
 		panel.add(scroll5);
 
 		this.setContentPane(panel);
@@ -102,4 +116,6 @@ public class Frame extends JFrame{
 			column[i] = i +"";
 		}
 	}
+
+
 }
