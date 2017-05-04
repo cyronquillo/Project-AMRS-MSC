@@ -57,7 +57,8 @@ public class Initialization{
 	/*END OF STAGES*/	
 
 	public String[][] data;
-	public String[][] dataReg;
+	public String[][] dataReg1;
+	public String[][] dataReg2;
 	public String[][] dataInst;
 	public String[][] dataFlags;
 	public String[][] dataHazards;
@@ -132,11 +133,17 @@ public class Initialization{
 		int x=32;
 		int i;
 
-		dataReg = new String[32][2];
+		dataReg1 = new String[16][2];
+		dataReg2 = new String[16][2];
 		
-		for(i=0;i<32;i++){
-			dataReg[i][0] = "R"+(i+1);
-			dataReg[i][1] = Integer.toString(registers.get("R"+(i+1)));
+		for(i=0;i<16;i++){
+			dataReg1[i][0] = "R"+(i+1);
+			dataReg1[i][1] = Integer.toString(registers.get("R"+(i+1)));
+		}
+
+		for(i=0;i<16;i++){
+			dataReg2[i][0] = "R"+(i+17);
+			dataReg2[i][1] = Integer.toString(registers.get("R"+(i+17)));
 		}
 	}
 

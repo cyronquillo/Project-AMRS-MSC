@@ -19,7 +19,8 @@ public class Frame extends JFrame{
 	public static JPanel panel = new JPanel();
 	JFileChooser fc = new JFileChooser();
 	public static JScrollPane scroll1 = new JScrollPane();
-	public static JScrollPane scroll2 = new JScrollPane();
+	public static JScrollPane scroll2_1 = new JScrollPane();
+	public static JScrollPane scroll2_2 = new JScrollPane();
 	String[] column;
 	String[] column1 = {"Register", "Value"};
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -61,14 +62,21 @@ public class Frame extends JFrame{
 		next.setBounds(450, 40, 100, 30);
 		panel.add(next);
 
-		JTable table2 = new JTable(start.dataReg, column1);
-		table2.setEnabled(false);
-		table2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		table2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-		scroll2.setViewportView(table2);
-		scroll2.setBounds(50,250,200,534);
-		panel.add(scroll2);
-		
+		JTable table2_1 = new JTable(start.dataReg1, column1);
+		table2_1.setEnabled(false);
+		table2_1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table2_1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		scroll2_1.setViewportView(table2_1);
+		scroll2_1.setBounds(50,250,200,534);
+		panel.add(scroll2_1);
+
+		JTable table2_2 = new JTable(start.dataReg2, column1);
+		table2_2.setEnabled(false);
+		table2_2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table2_2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		scroll2_2.setViewportView(table2_2);
+		scroll2_2.setBounds(300,250,200,534);
+		panel.add(scroll2_2);
 
 
 		this.setContentPane(panel);
