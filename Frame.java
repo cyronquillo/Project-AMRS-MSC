@@ -32,6 +32,8 @@ public class Frame extends JFrame{
 		start.populateTable();
 		buildColumns();
 
+		start.populateValues();
+
 		JTable table1 = new JTable(start.data, column); // creates a table for training data
 		table1.setEnabled(false);
 		table1.getColumnModel().getColumn(0).setPreferredWidth(120);

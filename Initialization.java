@@ -130,12 +130,13 @@ public class Initialization{
 
 	public void populateValues(){
 		int x=32;
+		int i;
 
 		dataReg = new String[32][2];
 		
-		for(i=1;i<33;i++){
-			dataReg[i][0] = "R"+i;
-			dataReg[i][1] = registers.get("R"+i);
+		for(i=1;i<32;i++){
+			dataReg[i][0] = "R"+(i+1);
+			dataReg[i][1] = Integer.toString(registers.get("R"+(i+1)));
 		}
 	}
 
