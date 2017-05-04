@@ -18,8 +18,14 @@ public class Frame extends JFrame{
 	JFileChooser fc = new JFileChooser();
 	public static JScrollPane scroll1 = new JScrollPane();
 	public static JScrollPane scroll2 = new JScrollPane();
+	public static JScrollPane scroll3 = new JScrollPane();
+	public static JScrollPane scroll4 = new JScrollPane();
+	public static JScrollPane scroll5 = new JScrollPane();
 	String[] column;
 	String[] column1 = {"Register", "Value"};
+	String[] column2 = {"Address", "Instruction"};
+	String[] column3 = {"Flag", "Values"};
+	String[] column4 = {"HAZARDS", "#"};
 
 	public static Initialization start = new Initialization("input/input.txt"); 
 	public Frame(){
@@ -53,6 +59,30 @@ public class Frame extends JFrame{
 		panel.add(scroll2);
 		// table1.getColumnModel().getColumn(0).setPreferredWidth(200);
 		// table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		JTable table3 = new JTable(start.dataInst,column2);
+		table3.setEnabled(false);
+		table3.getColumnModel().getColumn(0).setPreferredWidth(180);
+		table3.getColumnModel().getColumn(1).setPreferredWidth(300);
+		scroll3.setViewportView(table3);
+		scroll3.setBounds(250,300,150,200);
+		panel.add(scroll3);
+
+		JTable table4 = new JTable(start.dataFlags,column3);
+		table4.setEnabled(false);
+		table4.getColumnModel().getColumn(0).setPreferredWidth(300);
+		table4.getColumnModel().getColumn(1).setPreferredWidth(180);
+		scroll4.setViewportView(table4);
+		scroll4.setBounds(450,300,150,70);
+		panel.add(scroll4);
+
+		JTable table5 = new JTable(start.dataHazards,column4);
+		table5.setEnabled(false);
+		table5.getColumnModel().getColumn(0).setPreferredWidth(300);
+		table5.getColumnModel().getColumn(1).setPreferredWidth(180);
+		scroll5.setViewportView(table5);
+		scroll5.setBounds(650,300,150,86);
+		panel.add(scroll5);
 
 		this.setContentPane(panel);
 		this.setFocusable(true);
