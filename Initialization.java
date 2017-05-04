@@ -57,6 +57,11 @@ public class Initialization{
 	/*END OF STAGES*/	
 
 	public String[][] data;
+	public String[][] dataReg;
+	public String[][] dataInst;
+	public String[][] dataFlags;
+	public String[][] dataHazards;
+
 	public Initialization(String file){
 		
 		PC = 0;
@@ -123,7 +128,16 @@ public class Initialization{
 
 
 
-	
+	public void populateValues(){
+		int x=32;
+
+		dataReg = new String[32][2];
+		
+		for(i=1;i<33;i++){
+			dataReg[i][0] = "R"+i;
+			dataReg[i][1] = registers.get("R"+i);
+		}
+	}
 
 	
 	

@@ -17,7 +17,9 @@ public class Frame extends JFrame{
 	public static JPanel panel = new JPanel();
 	JFileChooser fc = new JFileChooser();
 	public static JScrollPane scroll1 = new JScrollPane();
+	public static JScrollPane scroll2 = new JScrollPane();
 	String[] column;
+	String[] column1 = {"Register", "Value"};
 
 	public static Initialization start = new Initialization("input/input.txt"); 
 	public Frame(){
@@ -32,12 +34,23 @@ public class Frame extends JFrame{
 
 		JTable table1 = new JTable(start.data, column); // creates a table for training data
 		table1.setEnabled(false);
-		table1.getColumnModel().getColumn(0).setPreferredWidth(100);
+		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
 		table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scroll1.setViewportView(table1);
-		scroll1.setBounds(40,40,800,150);
+		scroll1.setBounds(50,80,900,150);
 		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
 		panel.add(scroll1);
+
+		// JButton file = new JButton("Choose File");
+		// panel.add(file);
+
+		JTable table2 = new JTable();
+		table2.setEnabled(false);
+		scroll2.setViewportView(table2);
+		scroll2.setBounds(50,300,100,200);
+		panel.add(scroll2);
+		// table1.getColumnModel().getColumn(0).setPreferredWidth(200);
+		// table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		this.setContentPane(panel);
 		this.setFocusable(true);
