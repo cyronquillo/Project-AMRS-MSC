@@ -21,15 +21,20 @@ public class Frame extends JFrame{
 	public static JScrollPane scroll1 = new JScrollPane();
 	public static JScrollPane scroll2_1 = new JScrollPane();
 	public static JScrollPane scroll2_2 = new JScrollPane();
+	public static JScrollPane scroll3 = new JScrollPane();
+	public static JScrollPane scroll4 = new JScrollPane();
+	public static JScrollPane scroll5 = new JScrollPane();
 	String[] column;
 	String[] column1 = {"Register", "Value"};
+	String[] column2 = {"Address", "Instruction"};
+	String[] column3 = {"Flag", "Values"};
+	String[] column4 = {"HAZARDS", "#"};
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		
-
 	public static Initialization start = new Initialization("input/input.txt"); 
 	public Frame(){
 		super("Project AMRS");
-		this.setPreferredSize(new Dimension(1000,900));
+		this.setPreferredSize(new Dimension(1000,575));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		panel.setLayout(null);
@@ -67,7 +72,7 @@ public class Frame extends JFrame{
 		table2_1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		table2_1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		scroll2_1.setViewportView(table2_1);
-		scroll2_1.setBounds(50,250,200,534);
+		scroll2_1.setBounds(50,250,200,278);
 		panel.add(scroll2_1);
 
 		JTable table2_2 = new JTable(start.dataReg2, column1);
@@ -75,9 +80,57 @@ public class Frame extends JFrame{
 		table2_2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		table2_2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		scroll2_2.setViewportView(table2_2);
-		scroll2_2.setBounds(300,250,200,534);
+		scroll2_2.setBounds(320,250,200,278);
 		panel.add(scroll2_2);
 
+		JTable table3 = new JTable(start.dataInst,column2);
+		table3.setEnabled(false);
+		table3.getColumnModel().getColumn(0).setPreferredWidth(180);
+		table3.getColumnModel().getColumn(1).setPreferredWidth(300);
+		scroll3.setViewportView(table3);
+		scroll3.setBounds(585,250,150,200);
+		panel.add(scroll3);
+
+		JTable table4 = new JTable(start.dataFlags,column3);
+		table4.setEnabled(false);
+		table4.getColumnModel().getColumn(0).setPreferredWidth(300);
+		table4.getColumnModel().getColumn(1).setPreferredWidth(180);
+		scroll4.setViewportView(table4);
+		scroll4.setBounds(800,250,150,70);
+		panel.add(scroll4);
+
+		JTable table5 = new JTable(start.dataHazards,column4);
+		table5.setEnabled(false);
+		table5.getColumnModel().getColumn(0).setPreferredWidth(300);
+		table5.getColumnModel().getColumn(1).setPreferredWidth(180);
+		scroll5.setViewportView(table5);
+		scroll5.setBounds(800,365,150,86);
+		panel.add(scroll5);
+
+		JLabel CIR = new JLabel("CIR: "+Initialization.CIR);
+		CIR.setBounds(585, 450, 100, 30);
+		panel.add(CIR);
+
+		JLabel PC = new JLabel("PC: "+Integer.toString(Initialization.PC));
+		PC.setBounds(585, 470, 100, 30);
+		panel.add(PC);
+
+		JLabel MAR = new JLabel("MAR: "+Integer.toString(Initialization.MAR));
+		MAR.setBounds(585, 490, 100, 30);
+		panel.add(MAR);
+
+		String mbrContent = Initialization.MBR==null ? "null" : Initialization.MBR.getInstruction();
+		JLabel MBR = new JLabel("MBR: "+mbrContent);
+		MBR.setBounds(585, 510, 100, 30);
+		panel.add(MBR);
+
+		JLabel totalStalls = new JLabel("Stalls: "+Integer.toString(Initialization.clcy.getStalls()));
+		totalStalls.setBounds(800, 450, 100, 30);
+		panel.add(totalStalls);
+
+		JLabel totalCC = new JLabel("Clock Cyles: "+Integer.toString(Initialization.clcy.clockcycle.size()-1));
+		totalCC.setBounds(800, 470, 200, 30);
+		panel.add(totalCC);
 
 		this.setContentPane(panel);
 		this.setFocusable(true);

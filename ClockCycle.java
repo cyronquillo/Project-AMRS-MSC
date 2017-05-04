@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class ClockCycle{
 
 	public ArrayList<ArrayList<Instruction>> clockcycle= new ArrayList<ArrayList<Instruction>>();
-	public Integer stallCounter;
+	private Integer stallCounter;
 
 	public ClockCycle(){
 		stallCounter = 0;
@@ -209,4 +209,8 @@ public class ClockCycle{
     	System.out.print("\033[H\033[2J");  
     	System.out.flush();  
    	}  
+
+   	public int getStalls(){
+   		return this.stallCounter;
+   	}
 }

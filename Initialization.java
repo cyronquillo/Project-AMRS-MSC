@@ -12,7 +12,7 @@ public class Initialization{
 		/*since PC holds the address of the instruction to be executed, 
 		PC will be holding the index of the instruction based on the 
 		instructions arraylist*/
-	public static Integer MAR;
+	public static Integer MAR=-1;
 		/*MAR will be holding the address of the current instruction
 		being executed, so MAR will be holding an index of the 
 		instruction based on the instructions arraylist*/
@@ -145,6 +145,34 @@ public class Initialization{
 			dataReg2[i][0] = "R"+(i+17);
 			dataReg2[i][1] = Integer.toString(registers.get("R"+(i+17)));
 		}
+
+		dataInst = new String[instructions.size()][2];
+
+		for(i=0;i<instructions.size();i++){
+			dataInst[i][0] = Integer.toString(instructions.get(i).getAddress());
+			dataInst[i][1] = instructions.get(i).getInstruction();
+		}
+
+		dataFlags = new String[3][2];
+		dataFlags[0][0] = "Overflow Flag";
+		dataFlags[1][0] = "Zero Flag";
+		dataFlags[2][0] = "Negative Flag";
+		if(OF) dataFlags[0][1] = "1";
+		else dataFlags[0][1] = "0";
+		if(ZF) dataFlags[1][1] = "1";
+		else dataFlags[1][1] = "0";
+		if(NF) dataFlags[2][1] = "1";
+		else dataFlags[2][1] = "0";
+
+		dataHazards = new String[4][2];
+		dataHazards[0][0] = "WAW";
+		dataHazards[0][1] = "0";
+		dataHazards[1][0] = "RAW";
+		dataHazards[1][1] = "0";
+		dataHazards[2][0] = "WAR";
+		dataHazards[2][1] = "0";
+		dataHazards[3][0] = "DUP STAGE";
+		dataHazards[3][1] = "0";
 	}
 
 	
