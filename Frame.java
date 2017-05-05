@@ -52,9 +52,20 @@ public class Frame extends JFrame{
 		table1.setEnabled(false);
 		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
 		table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		int cc = Initialization.clcy.clockcycle.size();
+		for(int i = 1; i < cc+1; i++){
+			table1.getColumnModel().getColumn(i).setPreferredWidth(20);
+		}
+
 		table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scroll1.setViewportView(table1);
-		scroll1.setBounds(50,80,900,150);
+
+		int x,y;
+		if(cc >= 38) x = 120 + 38*20;
+		else x = 120+20*(cc+1);
+		if(start.data.length > 7) y = 150;
+		else y = 17*(start.data.length+1);
+		scroll1.setBounds(50,80,x,y);
 		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
 		panel.add(scroll1);
 
@@ -88,7 +99,8 @@ public class Frame extends JFrame{
 		table3.getColumnModel().getColumn(0).setPreferredWidth(180);
 		table3.getColumnModel().getColumn(1).setPreferredWidth(300);
 		scroll3.setViewportView(table3);
-		scroll3.setBounds(585,250,150,200);
+		if(start.dataInst.length > 11) scroll3.setBounds(585,250,150, 200);
+		else scroll3.setBounds(585,250,150, 17*(start.dataInst.length+1));
 		panel.add(scroll3);
 
 		JTable table4 = new JTable(start.dataFlags,column3);
