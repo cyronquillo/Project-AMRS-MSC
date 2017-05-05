@@ -1,4 +1,5 @@
 package instantiation;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -30,7 +31,8 @@ public class Frame extends JFrame{
 	String[] column3 = {"Flag", "Values"};
 	String[] column4 = {"HAZARDS", "#"};
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		
+	Yellow yellow = new Yellow();
+	Clear clear = new Clear();	
 	public static Initialization start = new Initialization("input/input.txt"); 
 	public Frame(){
 		super("Project AMRS");
@@ -52,7 +54,9 @@ public class Frame extends JFrame{
 		table1.setEnabled(false);
 		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
 		table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
 		int cc = Initialization.clcy.clockcycle.size();
+		
 		for(int i = 1; i < cc+1; i++){
 			table1.getColumnModel().getColumn(i).setPreferredWidth(20);
 		}
@@ -74,9 +78,6 @@ public class Frame extends JFrame{
 		file.setBounds(800, 20, 150, 30);
 		panel.add(file);
 
-		JButton next = new JButton("Next");
-		next.setBounds(450, 40, 100, 30);
-		panel.add(next);
 
 		JTable table2_1 = new JTable(start.dataReg1, column1);
 		table2_1.setEnabled(false);
@@ -96,17 +97,19 @@ public class Frame extends JFrame{
 
 		JTable table3 = new JTable(start.dataInst,column2);
 		table3.setEnabled(false);
-		table3.getColumnModel().getColumn(0).setPreferredWidth(180);
-		table3.getColumnModel().getColumn(1).setPreferredWidth(300);
+		table3.getColumnModel().getColumn(0).setPreferredWidth(250);
+		table3.getColumnModel().getColumn(1).setPreferredWidth(500);
+		table3.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		scroll3.setViewportView(table3);
-		if(start.dataInst.length > 11) scroll3.setBounds(585,250,150, 200);
-		else scroll3.setBounds(585,250,150, 17*(start.dataInst.length+1));
+		if(start.dataInst.length > 11) scroll3.setBounds(585,250,550, 200);
+		else scroll3.setBounds(585,250,200, 17*(start.dataInst.length+1));
 		panel.add(scroll3);
 
 		JTable table4 = new JTable(start.dataFlags,column3);
 		table4.setEnabled(false);
 		table4.getColumnModel().getColumn(0).setPreferredWidth(300);
 		table4.getColumnModel().getColumn(1).setPreferredWidth(180);
+		table4.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		scroll4.setViewportView(table4);
 		scroll4.setBounds(800,250,150,70);
 		panel.add(scroll4);
@@ -115,9 +118,14 @@ public class Frame extends JFrame{
 		table5.setEnabled(false);
 		table5.getColumnModel().getColumn(0).setPreferredWidth(300);
 		table5.getColumnModel().getColumn(1).setPreferredWidth(180);
+		table5.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		scroll5.setViewportView(table5);
 		scroll5.setBounds(800,365,150,86);
 		panel.add(scroll5);
+
+		JLabel ccLabel = new JLabel("Clock Cycle: " + Initialization.clcy.currentCC + " of " + (Initialization.clcy.clockcycle.size()-1));
+		ccLabel.setBounds(50, 50, 300, 30);
+		panel.add(ccLabel);
 
 		JLabel CIR = new JLabel("CIR: "+Initialization.CIR);
 		CIR.setBounds(585, 450, 100, 30);
@@ -133,7 +141,7 @@ public class Frame extends JFrame{
 
 		String mbrContent = Initialization.MBR==null ? "null" : Initialization.MBR.getInstruction();
 		JLabel MBR = new JLabel("MBR: "+mbrContent);
-		MBR.setBounds(585, 510, 100, 30);
+		MBR.setBounds(585, 510, 200, 30);
 		panel.add(MBR);
 
 		JLabel totalStalls = new JLabel("Stalls: "+Integer.toString(Initialization.clcy.getStalls()));
@@ -143,6 +151,65 @@ public class Frame extends JFrame{
 		JLabel totalCC = new JLabel("Clock Cyles: "+Integer.toString(Initialization.clcy.clockcycle.size()-1));
 		totalCC.setBounds(800, 470, 200, 30);
 		panel.add(totalCC);
+
+		JButton next = new JButton("Next");
+		next.setBounds(450, 40, 100, 30);
+		panel.add(next);
+		next.addActionListener(new ActionListener(){		// creates a table showing the points and its corresponding classification in the selected file
+			public void actionPerformed(ActionEvent e){
+				Initialization.clcy.currentCC++;
+				if(Initialization.clcy.currentCC < Initialization.clcy.clockcycle.size()){
+					table1.getColumnModel().getColumn(Initialization.clcy.currentCC-1).setCellRenderer(yellow);
+					if(Initialization.clcy.currentCC != 1) 
+						table1.getColumnModel().getColumn(Initialization.clcy.currentCC-2).setCellRenderer(clear);
+
+					Initialization.clcy.performInstructions(Initialization.clcy.currentCC);
+					start.populateTable();
+					start.populateValues();
+
+					JTable table2_1 = new JTable(start.dataReg1, column1);
+					table2_1.setEnabled(false);
+					table2_1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+					table2_1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+					scroll2_1.setViewportView(table2_1);
+					JTable table2_2 = new JTable(start.dataReg2, column1);
+					table2_2.setEnabled(false);
+					table2_2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+					table2_2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+					scroll2_2.setViewportView(table2_2);
+					JTable table3 = new JTable(start.dataInst,column2);
+					table3.setEnabled(false);
+					table3.getColumnModel().getColumn(0).setPreferredWidth(180);
+					table3.getColumnModel().getColumn(1).setPreferredWidth(300);
+					scroll3.setViewportView(table3);
+					JTable table4 = new JTable(start.dataFlags,column3);
+					table4.setEnabled(false);
+					table4.getColumnModel().getColumn(0).setPreferredWidth(300);
+					table4.getColumnModel().getColumn(1).setPreferredWidth(180);
+					scroll4.setViewportView(table4);
+					JTable table5 = new JTable(start.dataHazards,column4);
+					table5.setEnabled(false);
+					table5.getColumnModel().getColumn(0).setPreferredWidth(300);
+					table5.getColumnModel().getColumn(1).setPreferredWidth(180);
+					scroll5.setViewportView(table5);
+
+					ccLabel.setText("Clock Cycle: " + Initialization.clcy.currentCC + " of " + (Initialization.clcy.clockcycle.size()-1));
+					CIR.setText("CIR: "+Initialization.CIR);
+					PC.setText("PC: "+Integer.toString(Initialization.PC));
+				 	MAR.setText("MAR: "+Integer.toString(Initialization.MAR));
+					String mbrContent = Initialization.MBR==null ? "null" : Initialization.MBR.getInstruction();
+					MBR.setText("MBR: "+mbrContent);
+		 			totalStalls.setText("Stalls: "+Integer.toString(Initialization.clcy.getStalls()));
+					totalCC.setText("Clock Cyles: "+Integer.toString(Initialization.clcy.clockcycle.size()-1));
+					// table1.getColumnModel().getColumn(Initialization.clcy.currentCC-2).setCellRenderer(clear);
+				}
+				else{
+					table1.getColumnModel().getColumn(Initialization.clcy.clockcycle.size()-2).setCellRenderer(clear);
+
+				}
+				table1.repaint();
+			}
+		});
 
 		this.setContentPane(panel);
 		this.setFocusable(true);

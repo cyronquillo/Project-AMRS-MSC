@@ -5,13 +5,14 @@ public class ClockCycle{
 
 	public ArrayList<ArrayList<Instruction>> clockcycle= new ArrayList<ArrayList<Instruction>>();
 	private Integer stallCounter;
-
+	int currentCC;
 	public ClockCycle(){
 		stallCounter = 0;
 	}
 
 
 	public void buildClockCycles(){
+		this.currentCC = 0;
 		int clock = 0;
 		int limit;
 		int stalled;

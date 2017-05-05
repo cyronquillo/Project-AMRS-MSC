@@ -182,7 +182,6 @@ public class Initialization{
 		int x = instructions.size();
 		int y = clcy.clockcycle.size();
 		data = new String[x][y+1];
-		System.out.println(clcy.clockcycle.size());
 		for(int i = 0; i < x; i++){
 			for(int j = 0; j < y; j++){
 				data[i][j] = " ";
@@ -195,13 +194,6 @@ public class Initialization{
 			for(int j = 0; j < clcy.clockcycle.get(i).size(); j++){
 				data[clcy.clockcycle.get(i).get(j).getAddress()][i+1] = clcy.clockcycle.get(i).get(j).getStage();
 			}
-		}
-
-		for(int i = 0; i < x; i++){
-			for(int j = 0; j < y; j++){
-				System.out.print(data[i][j] +" ");
-			}
-			System.out.println();
 		}
 	}
 }
