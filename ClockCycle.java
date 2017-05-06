@@ -3,11 +3,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 public class ClockCycle{
 
-	public ArrayList<ArrayList<Instruction>> clockcycle= new ArrayList<ArrayList<Instruction>>();
+	public ArrayList<ArrayList<Instruction>> clockcycle;
 	private Integer stallCounter;
 	int currentCC;
 	public ClockCycle(){
 		stallCounter = 0;
+		currentCC = 0;
+		clockcycle = new ArrayList<ArrayList<Instruction>>();
 	}
 
 

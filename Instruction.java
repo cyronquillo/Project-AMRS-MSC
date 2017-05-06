@@ -173,6 +173,7 @@ public class Instruction{
 
 	public void perform(){
 		// use all the details of the instruction
+		if(this.stalled == true) return;
 		switch(this.status){
 			case FETCH:
 				Initialization.fetch.process(this);

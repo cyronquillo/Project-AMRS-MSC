@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.File;
 
 
 public class Initialization{
@@ -12,7 +13,7 @@ public class Initialization{
 		/*since PC holds the address of the instruction to be executed, 
 		PC will be holding the index of the instruction based on the 
 		instructions arraylist*/
-	public static Integer MAR=-1;
+	public static Integer MAR;
 		/*MAR will be holding the address of the current instruction
 		being executed, so MAR will be holding an index of the 
 		instruction based on the instructions arraylist*/
@@ -45,15 +46,15 @@ public class Initialization{
 
 	public static HashMap<String,Integer> registers = new HashMap<String,Integer>();
 	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
-	// public static ArrayList<ArrayList<Instruction>> clcy.clockcycle= new ArrayList<ArrayList<Instruction>>();
-	public static boolean err = false; // flag to terminate program when syntax errors are met
-	public static ClockCycle clcy = new ClockCycle();
+	public static boolean err; // flag to terminate program when syntax errors are met
+	public static boolean fileErr; // flag to terminate program when syntax errors are met
+	public static ClockCycle clcy;
 	/*STAGES*/
-	public static Fetch fetch = new Fetch();
-	public static Decode decode = new Decode();
-	public static Execute execute = new Execute();
-	public static Memory memory = new Memory();
-	public static Writeback writeback = new Writeback();
+	public static Fetch fetch;
+	public static Decode decode;
+	public static Execute execute;
+	public static Memory memory;
+	public static Writeback writeback;
 	/*END OF STAGES*/	
 
 	public String[][] data;
@@ -63,36 +64,43 @@ public class Initialization{
 	public String[][] dataFlags;
 	public String[][] dataHazards;
 
-	public Initialization(String file){
+	public Initialization(File file){
 		
-		PC = 0;
-		OF = false; // setting flags to default value
-		ZF = false;
-		NF = false;
+		
 
 
-		initialize(); // registers
+		// initialize(); // set all values 
 		readFile(file); //file reading
 
-		clcy.buildClockCycles();
 		// clcy.showClockCycle();
 	}
 
-	public static void readFile(String file){
+	public static void readFile(File file){
+		String line;
+		initialize();
 		try{
+			fileErr = false;
 			BufferedReader input = new BufferedReader (new FileReader (file));
-			String line;
+			if((line = input.readLine()) == null){
+				fileErr = true;
+				return;
+			}
 			int counter = 0;
-			while((line= input.readLine())!= null){
+			do{
 				Instruction inst = new Instruction(line.toUpperCase(), counter++);
 				instructions.add(inst);
-			}
+			}while((line= input.readLine())!= null);
 		}
-		catch(Exception ex){}
+		catch(Exception ex){
+			// System.exit(0);
+			fileErr = true;
+		}
 		if(err == true) System.exit(0);
+		clcy.buildClockCycles();
 	}
 
 	public static void initialize(){
+
 		registers.put("R1",0);
 		registers.put("R2",0);
 		registers.put("R3",0);
@@ -125,6 +133,20 @@ public class Initialization{
 		registers.put("R30",0);
 		registers.put("R31",0);
 		registers.put("R32",0);
+		err = false;
+		fileErr = false;
+		clcy = new ClockCycle();
+		PC = 0;
+		OF = false; // setting flags to default value
+		ZF = false;
+		NF = false;
+		MAR = -1;
+		fetch = new Fetch();
+		decode = new Decode();
+		execute = new Execute();
+		memory = new Memory();
+		writeback = new Writeback();
+		instructions = new ArrayList<Instruction>();
 	}
 
 
