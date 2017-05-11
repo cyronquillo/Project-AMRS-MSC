@@ -88,8 +88,6 @@ public class Frame extends JFrame{
 		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
 		panel.add(scroll1);
 
-		// creates button that enables user to choose a file 
-
 
 		table2_1 = new JTable(start.dataReg1, column1);
 		table2_1.setEnabled(false);
@@ -189,6 +187,8 @@ public class Frame extends JFrame{
 				table1.repaint();
 			}
 		});
+
+		
 		JButton file = new JButton("Choose File");
 		file.setBounds(800, 20, 150, 30);
 		panel.add(file);
