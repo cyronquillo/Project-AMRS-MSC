@@ -2,9 +2,9 @@
 package instantiation;
 public class Decode{
 
-	private String op1Var;
-	private int op1Val;
-	private int op2;
+	private String op1Var;					
+	private int op1Val;																					//holds the value of operand 1
+	private int op2;																					//holds the value of operand 2
 
 	public Decode(){}
 
@@ -12,10 +12,10 @@ public class Decode{
 		this.op1Var = toDecode.getParam1();
 		this.op1Val = getRegisterValue(toDecode.getParam1());
 
-		if(isRegister(toDecode.getParam2())) this.op2 = getRegisterValue(toDecode.getParam2());
-		else this.op2 = Integer.parseInt(toDecode.getParam2());
+		if(isRegister(toDecode.getParam2())) this.op2 = getRegisterValue(toDecode.getParam2());			//if operand 2 is a register
+		else this.op2 = Integer.parseInt(toDecode.getParam2());											//if operand 2 is an immediate value
 
-		Initialization.CIR = toDecode.getInstructionType();
+		Initialization.CIR = toDecode.getInstructionType();												//assigns instruction type to CIR
 		// printResult();
 	}
 

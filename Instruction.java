@@ -35,6 +35,12 @@ public class Instruction{
 			Initialization.err = true;
 			return ;
 		}
+		if(!Initialization.registers.containsKey(parser[2]) && !parser[0].equals("LOAD")){
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tSecond operand must contain a correct register: found " + parser[2]);
+			Initialization.err = true;
+			return ;
+		}
 		if(!supportedTypes.contains(parser[0])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tCannot find symbol: " + parser[0]);
