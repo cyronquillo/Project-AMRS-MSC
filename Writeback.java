@@ -18,26 +18,24 @@ public class Writeback{
 		setNF = Initialization.memory.getNF();
 		destination = Initialization.memory.getDestination();
 		
-		// System.out.println(value);
-
-		if(value==100){
-			changeFlags();
+		if(value==100){				//value==100 means that cmp is used
+			changeFlags();			//so write to flag only
 		}
 		else{
-			changeAll();
+			changeAll();			//else write also to right registers
 		}
 	}
 
-	private void changeFlags(){
+	private void changeFlags(){			//changes value of flags 
 		Initialization.ZF = setZF;
 		Initialization.OF = setOF;
 		Initialization.NF = setNF;
 	}
 
 	private void changeAll(){
-		changeFlags();
+		changeFlags();					
 
-		Initialization.registers.replace(destination, value);
+		Initialization.registers.replace(destination, value);		//replaces the value of register with the correct executed value
 
 	}
 

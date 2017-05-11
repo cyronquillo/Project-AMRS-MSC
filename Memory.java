@@ -17,11 +17,11 @@ public class Memory {
 
 	public void process(){
 
-		setZF = Initialization.execute.getZF();
-		setOF = Initialization.execute.getOF();
-		setNF = Initialization.execute.getNF();
-		value = Initialization.execute.getValue();
-		destination = Initialization.execute.getDestination();		
+		setZF = Initialization.execute.getZF();						//get value of zero flag from execute
+		setOF = Initialization.execute.getOF();						//get value of overflow flag from execute
+		setNF = Initialization.execute.getNF();						//get value of negative flag from execute
+		value = Initialization.execute.getValue();					//get value of executed instruction
+		destination = Initialization.execute.getDestination();		//get rgister destination
 
 	}
 
