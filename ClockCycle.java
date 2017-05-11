@@ -179,21 +179,29 @@ public class ClockCycle{
 	}
 
 	public boolean checkWAW(Instruction inst1, Instruction inst2){
+		if(inst1.getInstructionType().equals("CMP") || inst2.getInstructionType().equals("CMP")) return false;
 		if(inst1.getParam1().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END) {
 			inst2.setHazard("WAW");
 			return true;
 		}
 		return false;
 	}
-	public boolean checkWAR(Instruction inst1, Instruction inst2){
+	public boolean checkWAR(Instruction inst1, Instruction inst2){ // write (inst2) after read(inst1)
+		if(inst2.getInstructionType().equals("CMP")) return false;
 		if(inst1.getParam2().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END){
 			inst2.setHazard("WAR");
 			return true;
 		}
-		
+		if(inst1.getInstructionType().equals("CMP")){
+			if(inst1.getParam1().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END){
+				inst2.setHazard("WAR");
+				return true;
+			}
+		}
 		return false;
 	}
 	public boolean checkRAW(Instruction inst1, Instruction inst2){
+		if(inst1.getInstructionType().equals("CMP")) return false;
 		if(inst1.getParam1().equals(inst2.getParam2()) && inst1.getStatus() != Instruction.END){
 			inst2.setHazard("RAW");
 			return true;
@@ -202,7 +210,7 @@ public class ClockCycle{
 	}
 	public boolean checkDuplicateStage(Instruction inst1, Instruction inst2){
 		if(inst1.getStatus() == inst2.getStatus() + 1 && !inst1.getStall() && inst1.getStatus() != Instruction.END){
-			inst2.setHazard("Stage on Use");
+			inst2.setHazard("Structural Hazard");
 			return true;
 		}
 		return false;
