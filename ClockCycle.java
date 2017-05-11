@@ -5,6 +5,7 @@ public class ClockCycle{
 
 	public ArrayList<ArrayList<Instruction>> clockcycle;
 	private Integer stallCounter;
+	private Integer[][] hazardCounter;
 	int currentCC;
 	public ClockCycle(){
 		stallCounter = 0;
@@ -18,6 +19,16 @@ public class ClockCycle{
 		int clock = 0;
 		int limit;
 		int stalled;
+		int tempCC = 0;
+
+		int maxRow = 5*Initialization.instructions.size();
+		if(maxRow == 0) maxRow = 1; 
+		this.hazardCounter = new Integer[maxRow][4];
+		for(int i = 0; i < maxRow; i++){
+			for(int j = 0; j < 4; j++){
+				this.hazardCounter[i][j] = 0; // reset values to 0
+			}
+		}
 		do{
 			clockcycle.add(new ArrayList<Instruction>());
 			stalled = 0;
@@ -38,10 +49,10 @@ public class ClockCycle{
 				clockcycle.get(clock).get(i).setHazard("");
 				for(int j = 0; j < i; j++){
 					if(clockcycle.get(clock).get(i).getStatus() == Instruction.START) break;
-					if( checkRAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i)) || 
-							checkWAR(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i)) || 
-								checkWAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i)) || 
-								checkDuplicateStage(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i))) {
+					if( checkRAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
+							checkWAR(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
+								checkWAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
+								checkDuplicateStage(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC)) {
 						clockcycle.get(clock).get(i).setStall(true);
 						stalled = 1;
 						break;
@@ -57,6 +68,7 @@ public class ClockCycle{
 			}
 			stallCounter += stalled;
 			clock++;
+			tempCC++;
 		} while(!allInstructionsDone(clock));
 	}
 
@@ -178,42 +190,66 @@ public class ClockCycle{
 		System.out.println(Initialization.registers.get(reg));
 	}
 
-	public boolean checkWAW(Instruction inst1, Instruction inst2){
+	public boolean checkWAW(Instruction inst1, Instruction inst2, int cc){
 		if(inst1.getInstructionType().equals("CMP") || inst2.getInstructionType().equals("CMP")) return false;
 		if(inst1.getParam1().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END) {
 			inst2.setHazard("WAW");
+			hazardCounter[cc][0]++;
 			return true;
 		}
 		return false;
 	}
-	public boolean checkWAR(Instruction inst1, Instruction inst2){ // write (inst2) after read(inst1)
+	public boolean checkRAW(Instruction inst1, Instruction inst2, int cc){
+		if(inst1.getInstructionType().equals("CMP")) return false;
+		if(inst1.getParam1().equals(inst2.getParam2()) && inst1.getStatus() != Instruction.END){
+			inst2.setHazard("RAW");
+			hazardCounter[cc][1]++;
+			return true;
+		}
+		return false;
+	}
+	public boolean checkWAR(Instruction inst1, Instruction inst2, int cc){ // write (inst2) after read(inst1)
 		if(inst2.getInstructionType().equals("CMP")) return false;
 		if(inst1.getParam2().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END){
 			inst2.setHazard("WAR");
+			hazardCounter[cc][2]++;
 			return true;
 		}
 		if(inst1.getInstructionType().equals("CMP")){
 			if(inst1.getParam1().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END){
 				inst2.setHazard("WAR");
+				hazardCounter[cc][2]++;
 				return true;
 			}
 		}
 		return false;
 	}
-	public boolean checkRAW(Instruction inst1, Instruction inst2){
-		if(inst1.getInstructionType().equals("CMP")) return false;
-		if(inst1.getParam1().equals(inst2.getParam2()) && inst1.getStatus() != Instruction.END){
-			inst2.setHazard("RAW");
+	public boolean checkDuplicateStage(Instruction inst1, Instruction inst2, int cc){
+		if(inst1.getStatus() == inst2.getStatus() + 1 && !inst1.getStall() && inst1.getStatus() != Instruction.END){
+			inst2.setHazard("Structural Hazard");
+			hazardCounter[cc][3]++;
 			return true;
 		}
 		return false;
 	}
-	public boolean checkDuplicateStage(Instruction inst1, Instruction inst2){
-		if(inst1.getStatus() == inst2.getStatus() + 1 && !inst1.getStall() && inst1.getStatus() != Instruction.END){
-			inst2.setHazard("Structural Hazard");
-			return true;
-		}
-		return false;
+
+
+	public int getWAWCount(){
+		return this.hazardCounter[this.currentCC][0];
+	}
+
+	public int getRAWCount(){
+		return this.hazardCounter[this.currentCC][1];
+	}
+
+
+	public int getWARCount(){
+		return this.hazardCounter[this.currentCC][2];
+	}
+
+
+	public int getStructHazard(){
+		return this.hazardCounter[this.currentCC][3];
 	}
 
 	public static void clearScreen() {  

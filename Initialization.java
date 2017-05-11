@@ -188,13 +188,13 @@ public class Initialization{
 
 		dataHazards = new String[4][2];
 		dataHazards[0][0] = "WAW";
-		dataHazards[0][1] = "0";
+		dataHazards[0][1] = "" + clcy.getWAWCount();
 		dataHazards[1][0] = "RAW";
-		dataHazards[1][1] = "0";
+		dataHazards[1][1] = "" + clcy.getRAWCount() ;
 		dataHazards[2][0] = "WAR";
-		dataHazards[2][1] = "0";
+		dataHazards[2][1] = "" + clcy.getWARCount();
 		dataHazards[3][0] = "DUP STAGE";
-		dataHazards[3][1] = "0";
+		dataHazards[3][1] = "" + clcy.getStructHazard();
 	}
 
 	
