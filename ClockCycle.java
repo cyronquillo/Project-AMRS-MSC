@@ -47,7 +47,7 @@ public class ClockCycle{
 			for(int i = 0; i <  clockcycle.get(clock).size(); i++){
 				clockcycle.get(clock).get(i).setStall(false);
 				clockcycle.get(clock).get(i).setHazard("");
-				for(int j = 0; j < i; j++){
+				for(int j = i-1; j >= 0; j--){
 					if(clockcycle.get(clock).get(i).getStatus() == Instruction.START) break;
 					if( checkRAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
 							checkWAR(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
@@ -201,6 +201,12 @@ public class ClockCycle{
 	}
 	public boolean checkRAW(Instruction inst1, Instruction inst2, int cc){
 		if(inst1.getInstructionType().equals("CMP")) return false;
+		if(inst2.getInstructionType().equals("CMP")){
+			if(inst2.getParam1().equals(inst1.getParam1()) && inst1.getStatus() != Instruction.END){
+				hazardCounter[cc][1]++;
+				return true;	
+			}
+		}
 		if(inst1.getParam1().equals(inst2.getParam2()) && inst1.getStatus() != Instruction.END){
 			inst2.setHazard("RAW");
 			hazardCounter[cc][1]++;
