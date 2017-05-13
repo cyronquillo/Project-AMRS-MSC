@@ -15,22 +15,29 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.JOptionPane;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 
 public class Frame extends JFrame{
 	public static JPanel panel = new JPanel();
 	JFileChooser fc = new JFileChooser();
-	public static JScrollPane scroll1 = new JScrollPane();
-	public static JScrollPane scroll2_1 = new JScrollPane();
-	public static JScrollPane scroll2_2 = new JScrollPane();
-	public static JScrollPane scroll3 = new JScrollPane();
-	public static JScrollPane scroll4 = new JScrollPane();
-	public static JScrollPane scroll5 = new JScrollPane();
-	public static JTable table1;
-	public static JTable table2_1;
-	public static JTable table2_2;
-	public static JTable table3;
-	public static JTable table4;
-	public static JTable table5;
+	private JScrollPane scroll1 = new JScrollPane();
+	private JScrollPane scroll2_1 = new JScrollPane();
+	private JScrollPane scroll2_2 = new JScrollPane();
+	private JScrollPane scroll3 = new JScrollPane();
+	private JScrollPane scroll4 = new JScrollPane();
+	private JScrollPane scroll5 = new JScrollPane();
+	private JScrollPane scrollTA;
+	private JTable table1;
+	private JTable table2_1;
+	private JTable table2_2;
+	private JTable table3;
+	private JTable table4;
+	private JTable table5;
+	private JTextArea textArea;
+	public JLabel errLabel = new JLabel("ERROR: Check Terminal on What to Resolve!");
 	public JLabel ccLabel;
 	public JLabel CIR;
 	public JLabel PC;
@@ -58,12 +65,35 @@ public class Frame extends JFrame{
 
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
+		errLabel.setBounds(200,100,400,100);
+		errLabel.setVisible(false);
+		panel.add(errLabel);
+		textArea = new JTextArea(100,100);
+ 		scrollTA= new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+ 		scrollTA.setBounds(600,80,300,150);
+		panel.add(scrollTA);
+
+		JLabel loadLabel = new JLabel("LOAD");
+		loadLabel.setUI(new VerticalLabelUI(true));
+
+		JButton test = new JButton();
+		test.add(loadLabel);
+		test.setBounds(900, 80, 43,150);
+		test.addActionListener(new ActionListener(){		// creates a table showing the points and its corresponding classification in the selected file
+			public void actionPerformed(ActionEvent e){
+				try{
+					BufferedWriter bw = new BufferedWriter(new FileWriter("load.txt"));	
+					bw.write(textArea.getText());
+					bw.close();
+					loadValues(new File("load.txt"));
+				} catch(Exception ex){}
+			}
+		});
+		panel.add(test);
+
 		start.populateTable();
 		buildColumns();
-
 		start.populateValues();
-
-		
 
 		table1 = new JTable(start.data, column); 
 		table1.setEnabled(false);
@@ -162,7 +192,7 @@ public class Frame extends JFrame{
 		totalCC.setBounds(800, 470, 200, 30);
 		panel.add(totalCC);
 
-		JButton next = new JButton("Next");
+		next = new JButton("Next");
 		next.setBounds(450, 40, 100, 30);
 		panel.add(next);
 
@@ -182,6 +212,7 @@ public class Frame extends JFrame{
 				}
 				else{
 					table1.getColumnModel().getColumn(Initialization.clcy.clockcycle.size()-2).setCellRenderer(clear);
+					next.setVisible(false);
 
 				}
 				table1.repaint();
@@ -200,42 +231,8 @@ public class Frame extends JFrame{
 
 				if(returnVal == JFileChooser.APPROVE_OPTION){
 					File file = fc.getSelectedFile();
-					Initialization.readFile(file);
-					System.out.println(Initialization.instructions.size());
-					if(Initialization.fileErr == true) next.setVisible(false);
-					else next.setVisible(true);
-
-					start.populateTable();
-					buildColumns();
-
-					table1 = new JTable(start.data, column); 
-					table1.setEnabled(false);
-					table1.getColumnModel().getColumn(0).setPreferredWidth(120);
-					table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-
-					int cc = Initialization.clcy.clockcycle.size();
-
-					for(int i = 1; i < cc+1; i++){
-						table1.getColumnModel().getColumn(i).setPreferredWidth(20);
-					}
-
-					table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-					scroll1.setViewportView(table1);
-
-					int x,y;
-					if(cc >= 38) x = 120 + 38*20;
-					else x = 120+20*(cc+1);
-					if(start.data.length > 7) y = 150;
-					else y = 17*(start.data.length+1);
-					scroll1.setBounds(50,80,x,y);
-					FixedColumnTable fct = new FixedColumnTable(1, scroll1);
-
-					update();
-					for(int i = 0; i < Initialization.clcy.clockcycle.size(); i++){
-						table1.getColumnModel().getColumn(i).setCellRenderer(clear);
-
-					}
-					table1.repaint();
+					loadValues(file);
+					
 
 				}
 			}
@@ -246,10 +243,54 @@ public class Frame extends JFrame{
 		this.pack();																// packs the this
         this.setVisible(true);														// makes the this visible
         this.setLocationRelativeTo(null);
-		Initialization.clcy.showClockCycle();
+		// Initialization.clcy.showClockCycle();
 
 	}
+	public void loadValues(File file){
+		Initialization.storeTextArea(file);
 
+		if(Initialization.fileErr == true){
+			next.setVisible(false);
+			errLabel.setVisible(true);
+		}
+		else{
+			next.setVisible(true);
+			errLabel.setVisible(false);
+		}
+		textArea.setText(start.getTextAreaData());
+		start.populateTable();
+		buildColumns();
+		table1 = new JTable(start.data, column); 
+		table1.setEnabled(false);
+		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
+		table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+		int cc = Initialization.clcy.clockcycle.size();
+
+		for(int i = 1; i < cc+1; i++){
+			table1.getColumnModel().getColumn(i).setPreferredWidth(20);
+		}
+
+		table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		scroll1.setViewportView(table1);
+
+		int x,y;
+		if(cc >= 20) x = 120 + 20*20;
+		else x = 120+20*(cc+1);
+		if(start.data.length > 7) y = 150;
+		else y = 17*(start.data.length+1);
+		scroll1.setBounds(50,80,x,y);
+		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
+
+		update();
+		for(int i = 0; i < Initialization.clcy.clockcycle.size(); i++){
+			table1.getColumnModel().getColumn(i).setCellRenderer(clear);
+
+		}
+
+		table1.repaint();
+
+	}
 	public void update(){
 		start.populateValues();
 

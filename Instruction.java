@@ -26,40 +26,33 @@ public class Instruction{
 		if(parser.length != 3) {
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tParsing error!");
-			Initialization.err = true;
+			Initialization.fileErr = true;
 			return ;
 		}
 		if(!Initialization.registers.containsKey(parser[1])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tFirst operand must contain a correct register: found " + parser[1]);
-			Initialization.err = true;
+			Initialization.fileErr = true;
 			return ;
 		}
 		if(!Initialization.registers.containsKey(parser[2]) && !parser[0].equals("LOAD")){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tSecond operand must contain a correct register: found " + parser[2]);
-			Initialization.err = true;
+			Initialization.fileErr = true;
 			return ;
 		}
 		if(!supportedTypes.contains(parser[0])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tCannot find symbol: " + parser[0]);
-			Initialization.err = true;
+			Initialization.fileErr = true;
 			return ;
 		}
 		if(!isNumeric(parser[2]) && !Initialization.registers.containsKey(parser[2])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tCannot find symbol: " + parser[2]);
-			Initialization.err = true;
+			Initialization.fileErr = true;
 			return ;
 		}
-		// if(isNumeric(parser[2])){
-		// 	int num = Integer.parseInt(parser[2]);
-		// 	if(num > 99 || num < -99){
-		// 		System.out.println("Immediate value out of bounds: " + parser[2]);
-		// 		System.exit(0);	
-		// 	}
-		// }
 		this.status = START;
 		this.stalled = false;
 		this.instructionType = parser[0];

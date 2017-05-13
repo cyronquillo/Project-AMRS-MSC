@@ -46,7 +46,6 @@ public class Initialization{
 
 	public static HashMap<String,Integer> registers = new HashMap<String,Integer>();
 	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
-	public static boolean err; // flag to terminate program when syntax errors are met
 	public static boolean fileErr; // flag to terminate program when syntax errors are met
 	public static ClockCycle clcy;
 	/*STAGES*/
@@ -64,6 +63,7 @@ public class Initialization{
 	public String[][] dataFlags;
 	public String[][] dataHazards;
 
+	public static String textAreaData = "";
 	public Initialization(File file){
 		
 		
@@ -86,17 +86,35 @@ public class Initialization{
 				return;
 			}
 			int counter = 0;
-			do{
+			do{	
 				Instruction inst = new Instruction(line.toUpperCase(), counter++);
 				instructions.add(inst);
 			}while((line= input.readLine())!= null);
 		}
 		catch(Exception ex){
-			// System.exit(0);
 			fileErr = true;
 		}
-		if(err == true) System.exit(0);
-		clcy.buildClockCycles();
+		if(file.getName().equals(".")) clcy.buildClockCycles(); 
+		else if (fileErr == true) readFile(new File("."));
+		else clcy.buildClockCycles();
+	}
+	
+	public static void storeTextArea(File file){
+		textAreaData = "";
+		String line;
+		try{
+			BufferedReader input = new BufferedReader (new FileReader (file));
+			if((line = input.readLine()) == null){
+				return;
+			}
+			do{	
+				textAreaData += line.toUpperCase() + "\n";
+			}while((line= input.readLine())!= null);
+		}
+		catch(Exception ex){
+			System.out.println("Pumasok dito");
+		}
+		readFile(file);
 	}
 
 	public static void initialize(){
@@ -133,7 +151,6 @@ public class Initialization{
 		registers.put("R30",0);
 		registers.put("R31",0);
 		registers.put("R32",0);
-		err = false;
 		fileErr = false;
 		clcy = new ClockCycle();
 		PC = 0;
@@ -152,7 +169,6 @@ public class Initialization{
 
 
 	public void populateValues(){
-		int x=32;
 		int i;
 
 		dataReg1 = new String[16][2];
@@ -169,7 +185,7 @@ public class Initialization{
 		}
 
 		dataInst = new String[instructions.size()][2];
-
+		
 		for(i=0;i<instructions.size();i++){
 			dataInst[i][0] = Integer.toString(instructions.get(i).getAddress());
 			dataInst[i][1] = instructions.get(i).getInstruction();
@@ -198,7 +214,9 @@ public class Initialization{
 	}
 
 	
-	
+	public String getTextAreaData(){
+		return this.textAreaData;
+	}
 
 	public void populateTable(){
 		int x = instructions.size();
