@@ -35,6 +35,12 @@ public class Instruction{
 			Initialization.fileErr = true;
 			return ;
 		}
+		if(parser[0].equals("LOAD") && Initialization.registers.containsKey(parser[2])){
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tSecond operand must be an immediate value: found " + parser[2]);
+			Initialization.fileErr = true;
+			return ;
+		}
 		if(!Initialization.registers.containsKey(parser[2]) && !parser[0].equals("LOAD")){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tSecond operand must contain a correct register: found " + parser[2]);
