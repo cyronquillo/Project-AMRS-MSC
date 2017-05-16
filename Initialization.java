@@ -209,7 +209,7 @@ public class Initialization{
 		dataHazards[1][1] = "" + clcy.getRAWCount() ;
 		dataHazards[2][0] = "WAR";
 		dataHazards[2][1] = "" + clcy.getWARCount();
-		dataHazards[3][0] = "DUP STAGE";
+		dataHazards[3][0] = "Structural";
 		dataHazards[3][1] = "" + clcy.getStructHazard();
 	}
 
