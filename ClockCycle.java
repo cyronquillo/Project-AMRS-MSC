@@ -14,7 +14,7 @@ public class ClockCycle{
 	}
 
 
-	public void buildClockCycles(){
+	public void buildClockCycles(){	 // called to construct the out of order execution design of instructions
 		this.currentCC = 0;
 		int clock = 0;
 		int limit;
@@ -131,56 +131,7 @@ public class ClockCycle{
 			System.out.println("R"+i+": " + Initialization.registers.get("R" + i));
 		}
 	}
-	public void showClockCycle(){
-		Scanner reader = new Scanner(System.in);
-		int choice = 0;
-		int cc = 0;
-		int prevCC = -1;
-		do{
-
-			if(cc + 1 <= clockcycle.size()){
-				outputClockCycleSummary(cc);
-				if(cc != 0 && cc != prevCC){
-					performInstructions(cc);
-				}
-			} 
-			do{
-				prevCC = cc;
-				if(cc + 1 > clockcycle.size()){
-					System.out.println("Done!");
-					System.out.println("Total Stalls:" + stallCounter);
-					System.out.println("Total Clock Cycles: " +(cc-1));
-				}
-				if(cc + 1 <= clockcycle.size()) System.out.println("[1] Next Clock Cycle");
-				System.out.println("[2] Display Registers");
-				System.out.println("[3] Display Hazards");
-				System.out.println("[0] Exit");
-				System.out.print("Choice: ");
-				choice = reader.nextInt();
-			}while(choice < 0 || choice > 3);
-
-			switch(choice){
-				case 1: 
-						cc= cc+ 1;
-						clearScreen();
-						break;
-				case 0: 
-						System.out.println("Exiting...");
-						break;
-				case 2:
-						clearScreen();
-						printRegisters();
-						break;
-				case 3:
-						clearScreen();
-						hazardsEncountered(cc);
-						break;
-				default:
-						System.out.println("Invalid Input");
-			}
-
-		} while(choice != 0);
-	}
+	
 	
 	public static void store(String reg, int value){
 		Initialization.registers.replace(reg,value);

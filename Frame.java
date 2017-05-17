@@ -48,14 +48,14 @@ public class Frame extends JFrame{
 	public JButton next;
 
 	String[] column;
-	String[] column1 = {"Register", "Value"};
+	String[] column1 = {"Register", "Value"};	// column labels for the tables
 	String[] column2 = {"Address", "Instruction"};
 	String[] column3 = {"Flag", "Values"};
 	String[] column4 = {"HAZARDS", "#"};
 	
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();			//makes the texts centered
-	Yellow yellow = new Yellow();
-	Clear clear = new Clear();	
+	Yellow yellow = new Yellow();	// makes the column Yellow
+	Clear clear = new Clear();		// makes the column Clear/White
 	public static Initialization start = new Initialization(new File(".")); 
 	public Frame(){
 		super("Project AMRS");
@@ -66,12 +66,12 @@ public class Frame extends JFrame{
 
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-		errLabel.setBounds(200,100,400,100);
+		errLabel.setBounds(200,100,400,100);				// displays label when syntax error occured
 		errLabel.setVisible(false);
 		panel.add(errLabel);
-		textArea = new JTextArea(100,100);
+		textArea = new JTextArea(100,100);					// text area where you can edit your set of instructions and also write your own set
  		scrollTA= new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
- 		scrollTA.setBounds(600,80,300,150);
+ 		scrollTA.setBounds(600,80,300,150);					
 		panel.add(scrollTA);
 
 		JLabel loadLabel = new JLabel("LOAD");
@@ -80,7 +80,7 @@ public class Frame extends JFrame{
 		JButton test = new JButton();
 		test.add(loadLabel);
 		test.setBounds(900, 80, 43,150);
-		test.addActionListener(new ActionListener(){		// creates a table showing the points and its corresponding classification in the selected file
+		test.addActionListener(new ActionListener(){		// sends the instructions written in the text area to the load.txt
 			public void actionPerformed(ActionEvent e){
 				try{
 					BufferedWriter bw = new BufferedWriter(new FileWriter("load.txt"));	
@@ -95,13 +95,13 @@ public class Frame extends JFrame{
 		start.populateTable();
 		buildColumns();
 		start.populateValues();
-
+		// creates the table showing the pipelining design of the instructions sent to the program
 		table1 = new JTable(start.data, column); 
 		table1.setEnabled(false);
 		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
 		table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
-		int cc = Initialization.clcy.clockcycle.size();
+		int cc = Initialization.clcy.clockcycle.size(); 
 		
 		for(int i = 1; i < cc+1; i++){
 			table1.getColumnModel().getColumn(i).setPreferredWidth(20);
@@ -115,8 +115,8 @@ public class Frame extends JFrame{
 		else x = 120+20*(cc+1);
 		if(start.data.length > 7) y = 150;
 		else y = 17*(start.data.length+1);
-		scroll1.setBounds(50,80,x,y);
-		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
+		scroll1.setBounds(50,80,x,y);			// sets the bounds of the table showing the pipelining design
+		FixedColumnTable fct = new FixedColumnTable(1, scroll1);			// implemented so that the first column in the instructions is locked to the viewport
 		panel.add(scroll1);
 
 		//table for registers 1-16 and its corresponding values
@@ -209,26 +209,26 @@ public class Frame extends JFrame{
 		next.setBounds(450, 40, 100, 30);
 		panel.add(next);
 
-		if(Initialization.fileErr == true) next.setVisible(false);
+		if(Initialization.fileErr == true) next.setVisible(false);	// hides the 'next' button whenever the loaded instructions have a syntax error 
 		else next.setVisible(true);
 		
 		next.addActionListener(new ActionListener(){		// creates a table showing the points and its corresponding classification in the selected file
 			public void actionPerformed(ActionEvent e){
-				Initialization.clcy.currentCC++;
+				Initialization.clcy.currentCC++;	// moves to the next clock cycle
 				if(Initialization.clcy.currentCC < Initialization.clcy.clockcycle.size()){
-					table1.getColumnModel().getColumn(Initialization.clcy.currentCC-1).setCellRenderer(yellow);
+					table1.getColumnModel().getColumn(Initialization.clcy.currentCC-1).setCellRenderer(yellow); // sets the current cc column background to yellow
 					if(Initialization.clcy.currentCC != 1) 
-						table1.getColumnModel().getColumn(Initialization.clcy.currentCC-2).setCellRenderer(clear);
+						table1.getColumnModel().getColumn(Initialization.clcy.currentCC-2).setCellRenderer(clear); // sets the previous cc column background to white
 
-					Initialization.clcy.performInstructions(Initialization.clcy.currentCC);
-					update();					
+					Initialization.clcy.performInstructions(Initialization.clcy.currentCC);		// perform all instructions in that clock cycle
+					update();					// updates all the values in the tables presented in the GUI
 				}
 				else{
-					table1.getColumnModel().getColumn(Initialization.clcy.clockcycle.size()-2).setCellRenderer(clear);
+					table1.getColumnModel().getColumn(Initialization.clcy.clockcycle.size()-2).setCellRenderer(clear); // goes where whenever it goes already beyond the total clock cycle
 					next.setVisible(false);
 
 				}
-				table1.repaint();
+				table1.repaint();		// repaints the table
 			}
 		});
 
@@ -244,7 +244,7 @@ public class Frame extends JFrame{
 
 				if(returnVal == JFileChooser.APPROVE_OPTION){
 					File file = fc.getSelectedFile();
-					loadValues(file);
+					loadValues(file);						// load inputs from the file chosen by the user in the jfilechooser
 					
 
 				}
@@ -253,16 +253,15 @@ public class Frame extends JFrame{
 
 		this.setContentPane(panel);
 		this.setFocusable(true);
-		this.pack();																// packs the this
-        this.setVisible(true);														// makes the this visible
+		this.pack();																// packs the frame
+        this.setVisible(true);														// makes the frame visible
         this.setLocationRelativeTo(null);
-		// Initialization.clcy.showClockCycle();
 
 	}
-	public void loadValues(File file){
+	public void loadValues(File file){			// get all instructions loaded
 		Initialization.storeTextArea(file);
 
-		if(Initialization.fileErr == true){
+		if(Initialization.fileErr == true){		// whenever a syntax error is encountered
 			next.setVisible(false);
 			errLabel.setVisible(true);
 		}
@@ -273,7 +272,7 @@ public class Frame extends JFrame{
 		textArea.setText(start.getTextAreaData());
 		start.populateTable();
 		buildColumns();
-		table1 = new JTable(start.data, column); 
+		table1 = new JTable(start.data, column); 	// sets the new pipelining design table based on the inputted instructions
 		table1.setEnabled(false);
 		table1.getColumnModel().getColumn(0).setPreferredWidth(120);
 		table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -351,7 +350,7 @@ public class Frame extends JFrame{
 		totalStalls.setText("Stalls: "+Integer.toString(Initialization.clcy.getStalls()));
 		totalCC.setText("Clock Cyles: "+Integer.toString(Initialization.clcy.clockcycle.size()-1));
 	}
-	public void buildColumns(){
+	public void buildColumns(){	// used to create the number of columns in the pipelining design table
 		int x = Initialization.clcy.clockcycle.size()+1;
 		column = new String[x];
 		column[0] = "Instructions";
