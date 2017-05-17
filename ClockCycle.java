@@ -19,7 +19,7 @@ public class ClockCycle{
 		int clock = 0;
 		int limit;
 		int stalled;
-		int tempCC = 0;
+		int tempCC = 1;
 
 		int maxRow = 5*Initialization.instructions.size();
 		if(maxRow == 0) maxRow = 1; 
