@@ -1,7 +1,7 @@
 package instantiation;
 
 import javax.swing.JPanel;
-
+// object that changes a tables column background to white
 public class Clear extends javax.swing.table.DefaultTableCellRenderer {
 	JPanel panel = new JPanel();
     public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, java.lang.Object value, boolean isSelected, boolean hasFocus, int row, int column) {
