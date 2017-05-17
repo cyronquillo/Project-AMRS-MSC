@@ -52,7 +52,8 @@ public class Frame extends JFrame{
 	String[] column2 = {"Address", "Instruction"};
 	String[] column3 = {"Flag", "Values"};
 	String[] column4 = {"HAZARDS", "#"};
-	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	
+	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();			//makes the texts centered
 	Yellow yellow = new Yellow();
 	Clear clear = new Clear();	
 	public static Initialization start = new Initialization(new File(".")); 
@@ -118,7 +119,7 @@ public class Frame extends JFrame{
 		FixedColumnTable fct = new FixedColumnTable(1, scroll1);
 		panel.add(scroll1);
 
-
+		//table for registers 1-16 and its corresponding values
 		table2_1 = new JTable(start.dataReg1, column1);
 		table2_1.setEnabled(false);
 		table2_1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -127,6 +128,7 @@ public class Frame extends JFrame{
 		scroll2_1.setBounds(50,250,200,278);
 		panel.add(scroll2_1);
 
+		//table for registers 17-32 and its corresponding values
 		table2_2 = new JTable(start.dataReg2, column1);
 		table2_2.setEnabled(false);
 		table2_2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -135,6 +137,7 @@ public class Frame extends JFrame{
 		scroll2_2.setBounds(320,250,200,278);
 		panel.add(scroll2_2);
 
+		//table for instructions
 		table3 = new JTable(start.dataInst,column2);
 		table3.setEnabled(false);
 		table3.getColumnModel().getColumn(0).setPreferredWidth(250);
@@ -145,6 +148,7 @@ public class Frame extends JFrame{
 		else scroll3.setBounds(585,250,200, 17*(start.dataInst.length+1));
 		panel.add(scroll3);
 
+		//table for flags and its corresponding values
 		table4 = new JTable(start.dataFlags,column3);
 		table4.setEnabled(false);
 		table4.getColumnModel().getColumn(0).setPreferredWidth(300);
@@ -154,6 +158,7 @@ public class Frame extends JFrame{
 		scroll4.setBounds(800,250,150,70);
 		panel.add(scroll4);
 
+		//table for hazards and the count of hazards that occurred
 		table5 = new JTable(start.dataHazards,column4);
 		table5.setEnabled(false);
 		table5.getColumnModel().getColumn(0).setPreferredWidth(300);
@@ -163,35 +168,43 @@ public class Frame extends JFrame{
 		scroll5.setBounds(800,365,150,86);
 		panel.add(scroll5);
 
+		//Label that shows the clock cycle
 		ccLabel = new JLabel("Clock Cycle: " + Initialization.clcy.currentCC + " of " + (Initialization.clcy.clockcycle.size()-1));
 		ccLabel.setBounds(50, 50, 300, 30);
 		panel.add(ccLabel);
 
+		//Shows the current CIR
 		CIR = new JLabel("CIR: "+Initialization.CIR);
 		CIR.setBounds(585, 450, 100, 30);
 		panel.add(CIR);
 
+		//Shows the current content of PC
 		PC = new JLabel("PC: "+Integer.toString(Initialization.PC));
 		PC.setBounds(585, 470, 100, 30);
 		panel.add(PC);
 
+		//Shows current content of MAR
 		MAR = new JLabel("MAR: "+Integer.toString(Initialization.MAR));
 		MAR.setBounds(585, 490, 100, 30);
 		panel.add(MAR);
 
+		//Shows current content of MBR
 		String mbrContent = Initialization.MBR==null ? "null" : Initialization.MBR.getInstruction();
 		MBR = new JLabel("MBR: "+mbrContent);
 		MBR.setBounds(585, 510, 200, 30);
 		panel.add(MBR);
 
+		//Shows total number of stalls
 		totalStalls = new JLabel("Stalls: "+Integer.toString(Initialization.clcy.getStalls()));
 		totalStalls.setBounds(800, 450, 100, 30);
 		panel.add(totalStalls);
 
+		//Shows total clock cycle
 		totalCC = new JLabel("Clock Cyles: "+Integer.toString(Initialization.clcy.clockcycle.size()-1));
 		totalCC.setBounds(800, 470, 200, 30);
 		panel.add(totalCC);
 
+		//Button for that allows user to go to the next clock cycle
 		next = new JButton("Next");
 		next.setBounds(450, 40, 100, 30);
 		panel.add(next);
@@ -219,7 +232,7 @@ public class Frame extends JFrame{
 			}
 		});
 
-		
+		//Button that allows user to choose a file that will be loaded
 		JButton file = new JButton("Choose File");
 		file.setBounds(800, 20, 150, 30);
 		panel.add(file);
@@ -291,11 +304,9 @@ public class Frame extends JFrame{
 		table1.repaint();
 
 	}
-	public void update(){
+	public void update(){							//updates the values in the tables and of those in the labels.
 		start.populateValues();
 
-
-		
 
 		table2_1 = new JTable(start.dataReg1, column1);
 		table2_1.setEnabled(false);
@@ -308,19 +319,23 @@ public class Frame extends JFrame{
 		table2_2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		table2_2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		scroll2_2.setViewportView(table2_2);
+
 		table3 = new JTable(start.dataInst,column2);
 		table3.setEnabled(false);
 		table3.getColumnModel().getColumn(0).setPreferredWidth(250);
 		table3.getColumnModel().getColumn(1).setPreferredWidth(500);
 		table3.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		scroll3.setViewportView(table3);
+		
 		if(start.dataInst.length > 11) scroll3.setBounds(585,250,200, 200);
 		else scroll3.setBounds(585,250,200, 17*(start.dataInst.length+1));
+		
 		table4 = new JTable(start.dataFlags,column3);
 		table4.setEnabled(false);
 		table4.getColumnModel().getColumn(0).setPreferredWidth(300);
 		table4.getColumnModel().getColumn(1).setPreferredWidth(180);
 		scroll4.setViewportView(table4);
+		
 		table5 = new JTable(start.dataHazards,column4);
 		table5.setEnabled(false);
 		table5.getColumnModel().getColumn(0).setPreferredWidth(300);
