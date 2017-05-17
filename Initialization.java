@@ -158,6 +158,7 @@ public class Initialization{
 		ZF = false;
 		NF = false;
 		MAR = -1;
+		CIR = "null";
 		fetch = new Fetch();
 		decode = new Decode();
 		execute = new Execute();
