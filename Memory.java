@@ -20,8 +20,8 @@ public class Memory {
 		setZF = Initialization.execute.getZF();						//get value of zero flag from execute
 		setOF = Initialization.execute.getOF();						//get value of overflow flag from execute
 		setNF = Initialization.execute.getNF();						//get value of negative flag from execute
-		value = Initialization.execute.getValue();					//get value of executed instruction
-		destination = Initialization.execute.getDestination();		//get rgister destination
+		value = Initialization.execute.getValue();					//get value of executed instruction from execute
+		destination = Initialization.execute.getDestination();		//get rgister destination from execute
 
 	}
 
