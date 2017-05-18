@@ -45,7 +45,7 @@ public class Decode{
 		System.out.println("Operand 1: " + op1Val);
 		System.out.println("Operand 2: " + op2);
 	}
-
+/*=========getters==========*/
 	public int getOp1Val(){
 		return this.op1Val;
 	}

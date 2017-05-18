@@ -13,6 +13,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.basic.BasicLabelUI;
 
+
+// this class is used to rotate a jlabel by 90 degrees to be displayed vertically
 public class VerticalLabelUI extends BasicLabelUI {
     static {
         labelUI = new VerticalLabelUI(false);

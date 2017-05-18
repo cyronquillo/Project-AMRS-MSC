@@ -2,6 +2,7 @@ package instantiation;
 import java.util.ArrayList;
 import java.util.HashSet;
 public class Instruction{
+	/*CONSTANTS FOR EASE OF READABILITY*/
 	public static final int START = 0;
 	public static final int FETCH = 1;
 	public static final int DECODE = 2;
@@ -10,55 +11,65 @@ public class Instruction{
 	public static final int WRITEBACK = 5;
 	public static final int END = 6;
 
- 	private static HashSet<String> supportedTypes = new HashSet<String>(4);
+ 	private static HashSet<String> supportedTypes = new HashSet<String>(4); // contains the different operations
+	
 	private String instructionType;
 	private String param1;
 	private String param2;
-	private int status;
-	private boolean stalled;
 	private String hazard;
+	private int status;
 	private int address;
+	private boolean stalled;
+
 	public Instruction(String inst, int address){
-		fillSupportedTypes();
+		fillSupportedTypes(); 
 		this.address = address;
 		String newInst = inst.replaceAll("[,\\s\\n]+", " ");
 		String [] parser = newInst.split(" ");
-		if(parser.length != 3) {
+		/*SYNTAX ANALYSIS STARTS HERE*/
+		// when the instruction given lacks parameters or an operation
+		if(parser.length != 3) { 
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tParsing error!");
 			Initialization.fileErr = true;
 			return ;
 		}
-		if(!Initialization.registers.containsKey(parser[1])){
-			System.out.println("In instruction: " + inst); 
-			System.out.println("\tFirst operand must contain a correct register: found " + parser[1]);
-			Initialization.fileErr = true;
-			return ;
-		}
-		if(parser[0].equals("LOAD") && Initialization.registers.containsKey(parser[2])){
-			System.out.println("In instruction: " + inst); 
-			System.out.println("\tSecond operand must be an immediate value: found " + parser[2]);
-			Initialization.fileErr = true;
-			return ;
-		}
-		if(!Initialization.registers.containsKey(parser[2]) && !parser[0].equals("LOAD")){
-			System.out.println("In instruction: " + inst); 
-			System.out.println("\tSecond operand must contain a correct register: found " + parser[2]);
-			Initialization.fileErr = true;
-			return ;
-		}
+		// when the instruction does not exist in the supported types
 		if(!supportedTypes.contains(parser[0])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tCannot find symbol: " + parser[0]);
 			Initialization.fileErr = true;
 			return ;
 		}
+		// when the first operand does not contain a register
+		if(!Initialization.registers.containsKey(parser[1])){ 
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tFirst operand must contain a correct register: found " + parser[1]);
+			Initialization.fileErr = true;
+			return ;
+		}
+		//when the operation is a LOAD but the second operand is not an immediate value
+		if(parser[0].equals("LOAD") && Initialization.registers.containsKey(parser[2])){
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tSecond operand must be an immediate value: found " + parser[2]);
+			Initialization.fileErr = true;
+			return ;
+		}
+		// when the operation is not a LOAD but the second operand is not a valid register
+		if(!Initialization.registers.containsKey(parser[2]) && !parser[0].equals("LOAD")){
+			System.out.println("In instruction: " + inst); 
+			System.out.println("\tSecond operand must contain a correct register: found " + parser[2]);
+			Initialization.fileErr = true;
+			return ;
+		}
+		// when the second operand is neither 
 		if(!isNumeric(parser[2]) && !Initialization.registers.containsKey(parser[2])){
 			System.out.println("In instruction: " + inst); 
 			System.out.println("\tCannot find symbol: " + parser[2]);
 			Initialization.fileErr = true;
 			return ;
 		}
+
 		this.status = START;
 		this.stalled = false;
 		this.instructionType = parser[0];
@@ -66,6 +77,7 @@ public class Instruction{
 		this.param2 = parser[2];
 	}
 
+	// constructor for replicating an instruction's attributes
 	public Instruction(Instruction copy){
 		this.instructionType = copy.instructionType;
 		this.param1 = copy.param1;
@@ -75,9 +87,12 @@ public class Instruction{
 		this.address = copy.address;
 	}
 
+	//function to check if the given string is numeric or not
 	public static boolean isNumeric(String str){
 		return str.matches("-?\\d+");  //match a number with optional '-' and decimal.
 	}
+
+	// currently supported operations
 	private void fillSupportedTypes(){
 		supportedTypes.add("CMP");
 		supportedTypes.add("LOAD");
@@ -85,52 +100,48 @@ public class Instruction{
 		supportedTypes.add("ADD");
 	}
 
-	public int getStatus(){
-		return this.status;
-	}
+	// instruction is performed based on its current stage and whether it is stalled or not
+	public void perform(){
+		// use all the details of the instruction
+		if(this.stalled == true) return;
+		switch(this.status){
+			case FETCH:
+				Initialization.fetch.process(this);
+				break;
+			case DECODE:
+				Initialization.decode.process(this);
+				break;
+			case EXECUTE:
+				Initialization.execute.process();
+				break;
+			case MEMORY:
+				Initialization.memory.process();
+				break;
+			case WRITEBACK:
+				Initialization.writeback.process();
+				break;
+			default:
+				System.out.println(" ERR");
 
+		}
+	}
+	/*===========setters=============*/
 	public void setStatus(int status){
 		this.status = status;
 	}
 	public void setHazard(String hazard){
 		this.hazard = hazard;
 	}
-	public String getHazard(){
-		return this.hazard;
-	}
-	public void printStatus(){
-		if(this.status != END){
-			System.out.print("\t" +instructionType + "  "  + param1 +  "  " +param2 + ": " );	
-			if(this.stalled == true){
-				System.out.println("STALL");
-				return;
-			}
-			switch(this.status){
-				case FETCH:
-					System.out.println(" FETCH");
-					break;
-				case DECODE:
-					System.out.println(" DECODE");
-					break;
-				case EXECUTE:
-					System.out.println(" EXECUTE");
-					break;
-				case MEMORY:
-					System.out.println(" MEMORY");
-					break;
-				case WRITEBACK:
-					System.out.println(" WRITEBACK");
-					break;
-				default:
-					System.out.println(" ERR");
-			}
-		}
-	}
-
 	public void setStall(boolean toStall){
 		this.stalled = toStall;
 	}
-
+	/*============getters=============*/
+	public int getStatus(){
+		return this.status;
+	}
+	public String getHazard(){
+		return this.hazard;
+	}
 	public String getParam1(){
 		return this.param1; 
 	}
@@ -149,9 +160,8 @@ public class Instruction{
 	public int getAddress(){
 		return this.address;
 	}
-	public void printInstruction(){
-		System.out.println(instructionType + "  "  + param1 +  "  " +param2);	
-	}
+
+	// used for the table
 	public String getStage(){
 		if(this.stalled == true) return "S";
 		switch(this.status){
@@ -175,38 +185,4 @@ public class Instruction{
 	public String getInstruction(){
 		return instructionType + " " + param1 +", " + param2;
 	}
-
-	public void perform(){
-		// use all the details of the instruction
-		if(this.stalled == true) return;
-		switch(this.status){
-			case FETCH:
-				Initialization.fetch.process(this);
-				// System.out.println("fetching");
-				break;
-			case DECODE:
-				Initialization.decode.process(this);
-				// System.out.println("decoding");
-				break;
-			case EXECUTE:
-				Initialization.execute.process();
-				// System.out.println("executing");
-				// perform execute()
-				break;
-			case MEMORY:
-				Initialization.memory.process();
-				// System.out.println("memory");
-				// perform memory
-				break;
-			case WRITEBACK:
-				Initialization.writeback.process();
-				// System.out.println("writeback");
-				// perform writeback
-				break;
-			default:
-				System.out.println(" ERR");
-
-		}
-	}
-
 }

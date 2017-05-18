@@ -47,15 +47,16 @@ public class Initialization{
 	public static HashMap<String,Integer> registers = new HashMap<String,Integer>();
 	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 	public static boolean fileErr; // flag to terminate program when syntax errors are met
-	public static ClockCycle clcy;
-	/*STAGES*/
+	public static ClockCycle clcy; 
+
+	/*STAGES PROCESSORS*/
 	public static Fetch fetch;
 	public static Decode decode;
 	public static Execute execute;
 	public static Memory memory;
 	public static Writeback writeback;
-	/*END OF STAGES*/	
 
+	/*ARRAYS FOR THE TABLE VALUES IN GUI*/
 	public String[][] data;
 	public String[][] dataReg1;
 	public String[][] dataReg2;
@@ -63,16 +64,11 @@ public class Initialization{
 	public String[][] dataFlags;
 	public String[][] dataHazards;
 
+	/*value for the Text Area in GUI*/
 	public static String textAreaData = "";
+
 	public Initialization(File file){
-		
-		
-
-
-		// initialize(); // set all values 
 		readFile(file); //file reading
-
-		// clcy.showClockCycle();
 	}
 
 	public static void readFile(File file){
@@ -86,7 +82,7 @@ public class Initialization{
 				return;
 			}
 			int counter = 0;
-			do{	
+			do{	// reads every instruction in the given file
 				Instruction inst = new Instruction(line.toUpperCase(), counter++);
 				instructions.add(inst);
 			}while((line= input.readLine())!= null);
@@ -94,12 +90,12 @@ public class Initialization{
 		catch(Exception ex){
 			fileErr = true;
 		}
-		if(file.getName().equals(".")) clcy.buildClockCycles(); 
-		else if (fileErr == true) readFile(new File("."));
+		if(file.getName().equals(".")) clcy.buildClockCycles();
+		else if (fileErr == true) readFile(new File(".")); // sets the value of file to '.' when error to clear tables
 		else clcy.buildClockCycles();
 	}
 	
-	public static void storeTextArea(File file){
+	public static void storeTextArea(File file){ // store the value in the Text Area to a file
 		textAreaData = "";
 		String line;
 		try{
@@ -111,14 +107,11 @@ public class Initialization{
 				textAreaData += line.toUpperCase() + "\n";
 			}while((line= input.readLine())!= null);
 		}
-		catch(Exception ex){
-			System.out.println("Pumasok dito");
-		}
-		readFile(file);
+		catch(Exception ex){}
+		readFile(file); // then reads the file to run the instructions in the text area
 	}
 
-	public static void initialize(){
-
+	public static void initialize(){ // resets all values of necessary registers and variables
 		registers.put("R1",0);
 		registers.put("R2",0);
 		registers.put("R3",0);
@@ -171,27 +164,27 @@ public class Initialization{
 
 	public void populateValues(){
 		int i;
-
 		dataReg1 = new String[16][2];
 		dataReg2 = new String[16][2];
 		
-		for(i=0;i<16;i++){
+		for(i=0;i<16;i++){	//populates first register table
 			dataReg1[i][0] = "R"+(i+1);
 			dataReg1[i][1] = Integer.toString(registers.get("R"+(i+1)));
 		}
 
-		for(i=0;i<16;i++){
+		for(i=0;i<16;i++){	// populates second register table
 			dataReg2[i][0] = "R"+(i+17);
 			dataReg2[i][1] = Integer.toString(registers.get("R"+(i+17)));
 		}
 
 		dataInst = new String[instructions.size()][2];
 		
-		for(i=0;i<instructions.size();i++){
+		for(i=0;i<instructions.size();i++){ // populates instruction table
 			dataInst[i][0] = Integer.toString(instructions.get(i).getAddress());
 			dataInst[i][1] = instructions.get(i).getInstruction();
 		}
 
+		//populates flags table
 		dataFlags = new String[3][2];
 		dataFlags[0][0] = "Overflow Flag";
 		dataFlags[1][0] = "Zero Flag";
@@ -203,6 +196,7 @@ public class Initialization{
 		if(NF) dataFlags[2][1] = "1";
 		else dataFlags[2][1] = "0";
 
+		// populates hazards table
 		dataHazards = new String[4][2];
 		dataHazards[0][0] = "WAW";
 		dataHazards[0][1] = "" + clcy.getWAWCount();
@@ -215,11 +209,8 @@ public class Initialization{
 	}
 
 	
-	public String getTextAreaData(){
-		return this.textAreaData;
-	}
 
-	public void populateTable(){
+	public void populateTable(){ // populates the values for the pipelining design
 		int x = instructions.size();
 		int y = clcy.clockcycle.size();
 		data = new String[x][y+1];
@@ -236,5 +227,10 @@ public class Initialization{
 				data[clcy.clockcycle.get(i).get(j).getAddress()][i+1] = clcy.clockcycle.get(i).get(j).getStage();
 			}
 		}
+	}
+
+	/*==========getters==========*/
+	public String getTextAreaData(){
+		return this.textAreaData;
 	}
 }

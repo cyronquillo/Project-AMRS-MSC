@@ -3,7 +3,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 public class ClockCycle{
 
-	public ArrayList<ArrayList<Instruction>> clockcycle;
+	public ArrayList<ArrayList<Instruction>> clockcycle; // arraylist of an arraylist of instructions
+						// the outer arraylist represents all the clock cycles
+						// the inner arraylist represents each clockcycle containing instructions
 	private Integer stallCounter;
 	private Integer[][] hazardCounter;
 	int currentCC;
@@ -23,56 +25,57 @@ public class ClockCycle{
 
 		int maxRow = 5*Initialization.instructions.size();
 		if(maxRow == 0) maxRow = 1; 
-		this.hazardCounter = new Integer[maxRow][4];
+		this.hazardCounter = new Integer[maxRow][4]; // hazard counter array per clock cycle is assigned
 		for(int i = 0; i < maxRow; i++){
 			for(int j = 0; j < 4; j++){
 				this.hazardCounter[i][j] = 0; // reset values to 0
 			}
 		}
 		do{
-			clockcycle.add(new ArrayList<Instruction>());
-			stalled = 0;
+			clockcycle.add(new ArrayList<Instruction>()); 
+			stalled = 0; // holds the number total number of stalls in the whole cycle
 			if(clock!= 0){
-				for(int i = 0; i < clockcycle.get(clock-1).size(); i++){
-					if(clockcycle.get(clock-1).get(i).getStatus() < Instruction.END){
+				for(int i = 0; i < clockcycle.get(clock-1).size(); i++){ //adds the instructions that are already fetched but not yet done being processed
+					if(clockcycle.get(clock-1).get(i).getStatus() < Instruction.END){  
 						clockcycle.get(clock).add(new Instruction(clockcycle.get(clock-1).get(i)));
 					}
 				}
 				
 			}
-			if(clock < Initialization.instructions.size()){
+			if(clock < Initialization.instructions.size()){ // adds atmost one instruction for every clock cycle
 				clockcycle.get(clock).add(new Instruction(Initialization.instructions.get(clock)));
 			}
 
 			for(int i = 0; i <  clockcycle.get(clock).size(); i++){
-				clockcycle.get(clock).get(i).setStall(false);
-				clockcycle.get(clock).get(i).setHazard("");
-				for(int j = i-1; j >= 0; j--){
+				clockcycle.get(clock).get(i).setStall(false); //resets an instructions boolean stalled to false
+				clockcycle.get(clock).get(i).setHazard("");	// clears hazard
+				for(int j = i-1; j >= 0; j--){	// compares a current instructions to all instructions before it and searches for dependencies
 					if(clockcycle.get(clock).get(i).getStatus() == Instruction.START) break;
 					if( checkRAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
 							checkWAR(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
 								checkWAW(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC) || 
-								checkDuplicateStage(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC)) {
+									checkDuplicateStage(clockcycle.get(clock).get(j), clockcycle.get(clock).get(i),tempCC)) {
+						// performs these whenever atleast one hazard is observed
 						clockcycle.get(clock).get(i).setStall(true);
-						stalled = 1;
+						stalled = 1; // there exists atleast one stall in that clock cycle
 						break;
 					}
 
 				}
-				if(!clockcycle.get(clock).get(i).getStall()){
+				if(!clockcycle.get(clock).get(i).getStall()){ // if that instruction is not stalled, it can now move on the its next stage
 					clockcycle.get(clock).get(i).setStatus(
-						clockcycle.get(clock).get(i).getStatus() + 1 
+						clockcycle.get(clock).get(i).getStatus() + 1 // moves to next stage
 					);
 
 				}				
 			}
-			stallCounter += stalled;
-			clock++;
+			stallCounter += stalled; // total stall counter
+			clock++;	// next clock cycle
 			tempCC++;
 		} while(!allInstructionsDone(clock));
 	}
 
-	public boolean allInstructionsDone(int clock){
+	public boolean allInstructionsDone(int clock){ // checks if all instructions have already been executed and performed
 		int size = clockcycle.get(clock-1).size();
 		for(int i = 0; i<size; i++){
 			if(clockcycle.get(clock-1).get(i).getStatus() != Instruction.END) return false;
@@ -80,19 +83,9 @@ public class ClockCycle{
 		return true;
 		// clockcycle.get(clock-1).get(clockcycle.get(clock-1).size()-1).getStatus() != Instruction.END
 	}
-	public void outputClockCycleSummary(int cc){
-		int index = cc-1;
-		if(cc == 0){
-			System.out.println ("Clock Cycle 0: START");
-			return;
-		}
-		System.out.println("Clock Cycle " + (cc) + ": ");
-		for(int j = 0; j < clockcycle.get(index).size(); j++){
-			clockcycle.get(index).get(j).printStatus();
-		}
-	}
 
-	public void performInstructions(int cc){
+	public void performInstructions(int cc){ // called in the GUI whenever 'next' button is pressed
+		// basically it performs all the instructions in the clock cycle number given
 		int index = cc-1;
 		for(int i = 5; i > 0; i--){
 			for(int j = 0; j < clockcycle.get(index).size(); j++){
@@ -103,45 +96,14 @@ public class ClockCycle{
 		}
 	}
 
-	public void hazardsEncountered(int cc){
-		if(cc == 0) return;
-		int index = cc-1;
-		boolean noHazard = true;
-		for(int j = 0; j < clockcycle.get(index).size(); j++){
-				if(clockcycle.get(index).get(j).getStall()){
-					if(noHazard) System.out.println("Hazards: ");
-					System.out.println("\t"+clockcycle.get(index).get(j).getHazard());
-					noHazard = false;
-				}
-		}
-		if(noHazard) System.out.println("No Hazards for this Clock Cycle");
-	}
-	public void printRegisters(){
-		System.out.println("PC: " + Initialization.PC);
-		System.out.println("MAR: " + Initialization.MAR);
-		System.out.print("MBR: ");
-
-		if(Initialization.MBR == null) System.out.println("null");
-		else Initialization.MBR.printInstruction();
-		System.out.println("OF: " + Initialization.OF);
-		System.out.println("ZF: " + Initialization.ZF);
-		System.out.println("NF: " + Initialization.NF);
-
-		for(int i = 1; i < 33; i++){
-			System.out.println("R"+i+": " + Initialization.registers.get("R" + i));
-		}
-	}
 	
 	
-	public static void store(String reg, int value){
+	public static void store(String reg, int value){ // function used to store a 
 		Initialization.registers.replace(reg,value);
 	}
 
-	public static void print(String reg){
-		System.out.println(Initialization.registers.get(reg));
-	}
 
-	public boolean checkWAW(Instruction inst1, Instruction inst2, int cc){
+	public boolean checkWAW(Instruction inst1, Instruction inst2, int cc){ // checks for WAW dependence
 		if(inst1.getInstructionType().equals("CMP") || inst2.getInstructionType().equals("CMP")) return false;
 		if(inst1.getParam1().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END) {
 			inst2.setHazard("WAW");
@@ -150,7 +112,7 @@ public class ClockCycle{
 		}
 		return false;
 	}
-	public boolean checkRAW(Instruction inst1, Instruction inst2, int cc){
+	public boolean checkRAW(Instruction inst1, Instruction inst2, int cc){ // checks for RAW dependence
 		if(inst1.getInstructionType().equals("CMP")) return false;
 		if(inst2.getInstructionType().equals("CMP")){
 			if(inst2.getParam1().equals(inst1.getParam1()) && inst1.getStatus() != Instruction.END){
@@ -165,7 +127,7 @@ public class ClockCycle{
 		}
 		return false;
 	}
-	public boolean checkWAR(Instruction inst1, Instruction inst2, int cc){ // write (inst2) after read(inst1)
+	public boolean checkWAR(Instruction inst1, Instruction inst2, int cc){ // checks for WAR dependence
 		if(inst2.getInstructionType().equals("CMP")) return false;
 		if(inst1.getParam2().equals(inst2.getParam1()) && inst1.getStatus() != Instruction.END){
 			inst2.setHazard("WAR");
@@ -181,7 +143,7 @@ public class ClockCycle{
 		}
 		return false;
 	}
-	public boolean checkDuplicateStage(Instruction inst1, Instruction inst2, int cc){
+	public boolean checkDuplicateStage(Instruction inst1, Instruction inst2, int cc){ // checks for structural hazard 
 		if(inst1.getStatus() == inst2.getStatus() + 1 && !inst1.getStall() && inst1.getStatus() != Instruction.END){
 			inst2.setHazard("Structural Hazard");
 			hazardCounter[cc][3]++;
@@ -190,7 +152,7 @@ public class ClockCycle{
 		return false;
 	}
 
-
+/*=======getters=========*/
 	public int getWAWCount(){
 		return this.hazardCounter[this.currentCC][0];
 	}
@@ -199,20 +161,13 @@ public class ClockCycle{
 		return this.hazardCounter[this.currentCC][1];
 	}
 
-
 	public int getWARCount(){
 		return this.hazardCounter[this.currentCC][2];
 	}
 
-
 	public int getStructHazard(){
 		return this.hazardCounter[this.currentCC][3];
 	}
-
-	public static void clearScreen() {  
-    	System.out.print("\033[H\033[2J");  
-    	System.out.flush();  
-   	}  
 
    	public int getStalls(){
    		return this.stallCounter;

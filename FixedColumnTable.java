@@ -3,7 +3,7 @@ import java.beans.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-
+// imported object code to make a column of a table lock even when there is a scroll bar
 /*
  *  Prevent the specified number of columns from scrolling horizontally in
  *  the scroll pane. The table must already exist in the scroll pane.
